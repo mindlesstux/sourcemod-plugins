@@ -80,18 +80,22 @@ Version History
    is changed on the fly.
  . Generally just cleaned up code to benefit from some minor new features of
    SourceMod, and added further commenting and code consistency.
+-- 1.5 (1/29/16)
+ . Add a forgiveness factor for those that might be riding the line in ping
 -----------------------------------------------------------------------------
 */
 
 #pragma semicolon 1
 
 #include <sourcemod>
+#include <morecolors>
 
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.5"
 
 // Log path and player warning/grace period arrays
 new String:Logfile[PLATFORM_MAX_PATH];
 new PingWarnings[MAXPLAYERS + 1];
+new PingWarningsForgive[MAXPLAYERS + 1];
 new PingDelay[MAXPLAYERS + 1];
 
 // Timer handle for primary ping checking
@@ -104,6 +108,7 @@ new TimerCheck = false;
 new Handle:cvar_MinTime = INVALID_HANDLE;
 new Handle:cvar_MaxPing = INVALID_HANDLE;
 new Handle:cvar_CheckRate = INVALID_HANDLE;
+new Handle:cvar_ForgiveChecks = INVALID_HANDLE;
 new Handle:cvar_MaxWarnings = INVALID_HANDLE;
 new Handle:cvar_MinPlayers = INVALID_HANDLE;
 new Handle:cvar_KickMsg = INVALID_HANDLE;
@@ -137,14 +142,15 @@ public OnPluginStart()
 	cvar_MinTime = CreateConVar("sm_vbping_mintime",				"90",				"Minimum playtime before ping check begins", FCVAR_PLUGIN);
 	cvar_MaxPing = CreateConVar("sm_vbping_maxping",				"250",				"Maximum player ping", FCVAR_PLUGIN, true, 1.0);
 	cvar_CheckRate = CreateConVar("sm_vbping_checkrate",			"20.0",				"Period in seconds when rate is checked", FCVAR_PLUGIN, true, 1.0);
+	cvar_ForgiveChecks = CreateConVar("sm_vbping_forgivechecks",		"3",				"Number of checks in the good to forgive a warning", FCVAR_PLUGIN);
 	cvar_MaxWarnings = CreateConVar("sm_vbping_maxwarnings",		"10",				"Number of warnings before kick", FCVAR_PLUGIN, true, 1.0);
 	cvar_MinPlayers = CreateConVar("sm_vbping_minplayers",			"12",				"Minimum number of players before kicking", FCVAR_PLUGIN);
 	cvar_LogActions = CreateConVar("sm_vbping_logactions",			"0",				"Log warning and kick actions. 0 = Disabled, 1 = Enabled", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	cvar_ShowWarnings = CreateConVar("sm_vbping_showwarnings",		"1",				"Enable/disable warning messages. 0 = Disabled, 1 = Enabled", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	cvar_WarningMsg = CreateConVar("sm_vbping_warningmsg",			"You will be kicked for excessive ping. You have {WARN} out of {MAXWARN} warnings.",				"Warning message sent to high ping client. {WARN} and {MAXWARN} converts to the warning count and max warnings respectively.", FCVAR_PLUGIN);
+	cvar_WarningMsg = CreateConVar("sm_vbping_warningmsg",			"{green}[Highping] {olive}You will be kicked for excessive ping. You have {lightgreen}{WARN} {olive}out of {lightgreen}{MAXWARN} warnings{olive}.",				"Warning message sent to high ping client. {WARN} and {MAXWARN} converts to the warning count and max warnings respectively.", FCVAR_PLUGIN);
 	cvar_KickMsg = CreateConVar("sm_vbping_kickmsg",				"You have been kicked due to excessive ping",				"Kick message sent to kicked client", FCVAR_PLUGIN);
 	cvar_ShowPublicKick = CreateConVar("sm_vbping_showpublickick",	"0",				"Enable/disable public kick message. 0 = Disabled, 1 = Enabled", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	cvar_KickMsgPublic = CreateConVar("sm_vbping_kickmsgpublic",	"{NAME} was been kicked due to excessive ping",				"Public kick message. {NAME} converts to the player's name.", FCVAR_PLUGIN);
+	cvar_KickMsgPublic = CreateConVar("sm_vbping_kickmsgpublic",	"{green}[Highping] {lightgreen}{NAME} {olive}was been kicked due to excessive ping",				"Public kick message. {NAME} converts to the player's name.", FCVAR_PLUGIN);
 	cvar_ImmunityFlag = CreateConVar("sm_vbping_immunityflag",		"a",				"SourceMod admin flag used to grant immunity to all ping checking/kicking", FCVAR_PLUGIN);
 
 	// Hook changing of the ping checking rate cvar
@@ -164,6 +170,7 @@ public OnPluginStart()
 	for (new i = 1; i <= maxplayers; i++)
 	{
 		PingWarnings[i] = 0;
+		PingWarningsForgive[i] = 0;
 		PingDelay[i] = true;
 	}
 
@@ -180,6 +187,7 @@ public OnMapStart()
 	for (new i = 1; i <= MaxClients; i++)
 	{
 		PingWarnings[i] = 0;
+		PingWarningsForgive[i] = 0;
 		PingDelay[i] = true;
 	}
 
@@ -233,6 +241,7 @@ public Action:cmd_Debug(client, args)
 public OnClientPostAdminCheck(client)
 {
 	PingWarnings[client] = 0;
+	PingWarningsForgive[client] = 0;
 	PingDelay[client] = true;
 	CreateTimer(GetConVarFloat(cvar_MinTime), timer_ExpirePingDelay, client);
 }
@@ -245,6 +254,7 @@ public Action:timer_EnableCheck(Handle:timer)
 	for (new i = 1; i <= MaxClients; i++)
 	{
 		PingWarnings[i] = 0;
+		PingWarningsForgive[i] = 0;
 		PingDelay[i] = false;
 	}
 }
@@ -328,7 +338,7 @@ public Action:timer_CheckPing(Handle:timer)
 				{
 					GetConVarString(cvar_KickMsgPublic, Message, sizeof(Message));
 					ReplaceString(Message, sizeof(Message), "{NAME}", Name, true);
-					PrintToChatAll("%s", Message);
+					CPrintToChatAll("%s", Message);
 				}
 
 				if (GetConVarBool(cvar_LogActions))
@@ -363,12 +373,44 @@ public Action:timer_CheckPing(Handle:timer)
 					GetConVarString(cvar_MaxWarnings, tmp, sizeof(tmp));
 					ReplaceString(Message, sizeof(Message), "{MAXWARN}", tmp, true);
 
-					PrintToChat(i, "%s", Message);
+					CPrintToChat(i, "%s", Message);
 				}
 
 				// Log the warning to the ping log
 				if (GetConVarBool(cvar_LogActions))
 					LogToFile(Logfile, "%N has %i ping warning (Ping: %f)", i, PingWarnings[i], Ping);
+			} else {
+				if (PingWarnings[i] > 0)
+				{
+					if (PingWarningsForgive[i] == GetConVarInt(cvar_ForgiveChecks))
+					{
+						// Forgive a warning
+						PingWarnings[i] = PingWarnings[i] - 1;
+
+						// Tell the player they received a ping warning
+						if (GetConVarBool(cvar_ShowWarnings))
+						{
+							new String:tmp[32];
+							GetConVarString(cvar_WarningMsg, Message, sizeof(Message));
+
+							IntToString(PingWarnings[i], tmp, sizeof(tmp));
+							ReplaceString(Message, sizeof(Message), "{WARN}", tmp, true);
+
+							GetConVarString(cvar_MaxWarnings, tmp, sizeof(tmp));
+							ReplaceString(Message, sizeof(Message), "{MAXWARN}", tmp, true);
+
+							CPrintToChat(i, "%s", Message);
+						}
+
+						// Log the warning to the ping log
+						if (GetConVarBool(cvar_LogActions))
+							LogToFile(Logfile, "%N has %i ping warning (Ping: %f)", i, PingWarnings[i], Ping);
+
+					} else {
+						// Add to forgiveness
+						PingWarningsForgive[i] = PingWarningsForgive[i] + 1;
+					}
+				}
 			}
 		}
 	}
