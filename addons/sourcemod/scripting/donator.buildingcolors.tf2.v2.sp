@@ -1,13 +1,19 @@
 #include <sourcemod>
+#include <clientprefs>
 #include <sdktools>
 #include <donator>
 
+#undef REQUIRE_PLUGIN
+#include <updater>
+
+#define UPDATE_URL    "http://teamplayfirst.com/sourcemod-plugins/buildingcolors.tf2/updatefile.txt"
+
 #pragma semicolon 1
 
-#define PLUGIN_VERSION	"b1"
+#define PLUGIN_VERSION	"b2"
 
-new Handle:c_RedColorCookie = INVALID_HANDLE;
-new Handle:c_BlueColorCookie = INVALID_HANDLE;
+new Handle:g_RedColorCookie = INVALID_HANDLE;
+new Handle:g_BlueColorCookie = INVALID_HANDLE;
 new g_red_Color[MAXPLAYERS + 1];
 new g_blue_Color[MAXPLAYERS + 1];
 
@@ -29,6 +35,19 @@ public OnPluginStart()
 	g_BlueColorCookie = RegClientCookie("donator_bluecolorcookie", "Color for blue engie buildings", CookieAccess_Private);
 
 	HookEvent("player_builtobject", Event_BuiltObject);
+
+	if (LibraryExists("updater"))
+	{
+		Updater_AddPlugin(UPDATE_URL);
+	}
+}
+
+public OnLibraryAdded(const String:name[])
+{
+    if (StrEqual(name, "updater"))
+    {
+        Updater_AddPlugin(UPDATE_URL);
+    }
 }
 
 public OnPluginEnd() 
@@ -38,7 +57,7 @@ public OnPluginEnd()
         SetEntityRenderColor(iEntity, 255, 255, 255, _); 
     while((iEntity = FindEntityByClassname(iEntity, "obj_teleporter")) != INVALID_ENT_REFERENCE) 
         SetEntityRenderColor(iEntity, 255, 255, 255, _); 
-    while((iEntity = FindEntityByClassname(iEntity, "obj_sentry")) != INVALID_ENT_REFERENCE) 
+    while((iEntity = FindEntityByClassname(iEntity, "obj_sentrygun")) != INVALID_ENT_REFERENCE) 
         SetEntityRenderColor(iEntity, 255, 255, 255, _); 
 } 
 
@@ -111,12 +130,12 @@ public BuildingRedColorMenuSelected(Handle:menu, MenuAction:action, iClient, par
 	{
 		decl String:info[12];
 		GetMenuItem(menu, param2, info, sizeof(info));
-		gRedColor[iClient] = StringToInt(info);
-		UpdateExistingBuildings(iClient)
+		g_red_Color[iClient] = StringToInt(info);
+		UpdateExistingBuildings(iClient);
 
 		decl String:szBuffer[2];
 		FormatEx(szBuffer, sizeof(szBuffer), "%i", info);
-		SetClientCookie(iClent, g_RedColorCookie, szBuffer);
+		SetClientCookie(iClient, g_RedColorCookie, szBuffer);
 	}
 }
 
@@ -131,12 +150,12 @@ public BuildingBlueColorMenuSelected(Handle:menu, MenuAction:action, iClient, pa
 	{
 		decl String:info[12];
 		GetMenuItem(menu, param2, info, sizeof(info));
-		gBlueColor[iClient] = StringToInt(info);
-		UpdateExistingBuildings(iClient)
+		g_blue_Color[iClient] = StringToInt(info);
+		UpdateExistingBuildings(iClient);
 
 		decl String:szBuffer[2];
 		FormatEx(szBuffer, sizeof(szBuffer), "%i", info);
-		SetClientCookie(iClent, g_BlueColorCookie, szBuffer);
+		SetClientCookie(iClient, g_BlueColorCookie, szBuffer);
 	}
 }
 
@@ -145,22 +164,22 @@ public OnClientPutInServer(iClient)
 	if (IsPlayerDonator(iClient))
 	{
 		new String:szBuffer[2];
-		GetClientCookie(i, g_RedColorCookie, szBuffer, sizeof(szBuffer));
-		gRedColor[iClient] = StringToInt(szBuffer);
 
-		new String:szBuffer[2];
-		GetClientCookie(i, g_BlueColorCookie, szBuffer, sizeof(szBuffer));
-		gBlueColor[iClient] = StringToInt(szBuffer);		
+		GetClientCookie(iClient, g_RedColorCookie, szBuffer, sizeof(szBuffer));
+		g_red_Color[iClient] = StringToInt(szBuffer);
+
+		GetClientCookie(iClient, g_BlueColorCookie, szBuffer, sizeof(szBuffer));
+		g_blue_Color[iClient] = StringToInt(szBuffer);		
 	} else {
-		gRedColor[iClient] = 0;	
-		gBlueColor[iClient] = 0;
+		g_red_Color[iClient] = 0;	
+		g_red_Color[iClient] = 0;
 	}
 }
 
 public OnClientDisconnect(iClient)
 {
-	gRedColor[iClient] = 0;	
-	gBlueColor[iClient] = 0;
+	g_red_Color[iClient] = 0;	
+	g_blue_Color[iClient] = 0;
 }
 
 stock bool:IsValidClient(iClient, bool:replay = true)
@@ -173,35 +192,35 @@ stock bool:IsValidClient(iClient, bool:replay = true)
 stock SetBuildingColor(iEntity, iOwner)
 {
 	// Red?
-	if (GetClientTeam == 2) 
+	if (GetClientTeam(iOwner) == 2) 
 	{
-		switch(gRedColor[iClient])
+		switch(g_red_Color[iOwner])
 		{
-			case 1: SetEntityRenderColor(iBuilding, 0, 0, 0, _);
-			case 2: SetEntityRenderColor(iBuilding, 255, 0, 0, _);
-			case 3: SetEntityRenderColor(iBuilding, 0, 255, 0, _);
-			case 4: SetEntityRenderColor(iBuilding, 0, 0, 255, _);
-			case 5: SetEntityRenderColor(iBuilding, 255, 255, 0, _);
-			case 6: SetEntityRenderColor(iBuilding, 255, 0, 255, _);
-			case 7: SetEntityRenderColor(iBuilding, 0, 255, 255, _);
-			case 8: SetEntityRenderColor(iBuilding, 255, 128, 0, _);
-			case 9: SetEntityRenderColor(iBuilding, 255, 0, 128, _);
+			case 1: SetEntityRenderColor(iEntity, 0, 0, 0, _);
+			case 2: SetEntityRenderColor(iEntity, 255, 0, 0, _);
+			case 3: SetEntityRenderColor(iEntity, 0, 255, 0, _);
+			case 4: SetEntityRenderColor(iEntity, 0, 0, 255, _);
+			case 5: SetEntityRenderColor(iEntity, 255, 255, 0, _);
+			case 6: SetEntityRenderColor(iEntity, 255, 0, 255, _);
+			case 7: SetEntityRenderColor(iEntity, 0, 255, 255, _);
+			case 8: SetEntityRenderColor(iEntity, 255, 128, 0, _);
+			case 9: SetEntityRenderColor(iEntity, 255, 0, 128, _);
 		}
 	}
 	// Blue?
-	if (GetClientTeam == 3)
+	if (GetClientTeam(iOwner) == 3)
 	{
-		switch(gBlueColor[iClient])
+		switch(g_blue_Color[iOwner])
 		{
-			case 1: SetEntityRenderColor(iBuilding, 0, 0, 0, _);
-			case 2: SetEntityRenderColor(iBuilding, 255, 0, 0, _);
-			case 3: SetEntityRenderColor(iBuilding, 0, 255, 0, _);
-			case 4: SetEntityRenderColor(iBuilding, 0, 0, 255, _);
-			case 5: SetEntityRenderColor(iBuilding, 255, 255, 0, _);
-			case 6: SetEntityRenderColor(iBuilding, 255, 0, 255, _);
-			case 7: SetEntityRenderColor(iBuilding, 0, 255, 255, _);
-			case 8: SetEntityRenderColor(iBuilding, 255, 128, 0, _);
-			case 9: SetEntityRenderColor(iBuilding, 255, 0, 128, _);
+			case 1: SetEntityRenderColor(iEntity, 0, 0, 0, _);
+			case 2: SetEntityRenderColor(iEntity, 255, 0, 0, _);
+			case 3: SetEntityRenderColor(iEntity, 0, 255, 0, _);
+			case 4: SetEntityRenderColor(iEntity, 0, 0, 255, _);
+			case 5: SetEntityRenderColor(iEntity, 255, 255, 0, _);
+			case 6: SetEntityRenderColor(iEntity, 255, 0, 255, _);
+			case 7: SetEntityRenderColor(iEntity, 0, 255, 255, _);
+			case 8: SetEntityRenderColor(iEntity, 255, 128, 0, _);
+			case 9: SetEntityRenderColor(iEntity, 255, 0, 128, _);
 		}
 	}
 }
@@ -220,7 +239,7 @@ stock UpdateExistingBuildings(iOwner)
             if(GetEntPropEnt(iEntity, Prop_Send, "m_hBuilder") == iOwner) 
                 SetBuildingColor(iEntity, iOwner); 
         } 
-        while((iEntity = FindEntityByClassname(iEntity, "obj_sentry")) != INVALID_ENT_REFERENCE) 
+        while((iEntity = FindEntityByClassname(iEntity, "obj_sentrygun")) != INVALID_ENT_REFERENCE) 
         { 
             if(GetEntPropEnt(iEntity, Prop_Send, "m_hBuilder") == iOwner) 
                 SetBuildingColor(iEntity, iOwner); 
@@ -235,7 +254,7 @@ public Action:Event_BuiltObject(Handle:event, const String:name[], bool:dontBroa
 	
 	if (IsPlayerDonator(iClient))
 	{
-		SetBuildingColor(iBuilding, iClient)
+		SetBuildingColor(iBuilding, iClient);
 	}
 	return Plugin_Continue;
 }
