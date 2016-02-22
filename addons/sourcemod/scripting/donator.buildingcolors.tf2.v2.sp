@@ -10,7 +10,7 @@
 
 #pragma semicolon 1
 
-#define PLUGIN_VERSION	"b11"
+#define PLUGIN_VERSION	"b13"
 
 new Handle:g_RedColorCookie = INVALID_HANDLE;
 new Handle:g_BlueColorCookie = INVALID_HANDLE;
@@ -41,16 +41,14 @@ public OnPluginStart()
 {
 	CreateConVar("basicdonator_buildingcolor", PLUGIN_VERSION, "Donator Feature: Color Engineer Buildings", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 
-	RegConsoleCmd("sm_buildingcustom", cmd_ReloadCustomColor);
-
 	// Store custom building colors
 	g_RedColorCookie = RegClientCookie("donator_redbuildingcolor", "Color for red engie buildings", CookieAccess_Protected);
 	g_BlueColorCookie = RegClientCookie("donator_bluebuildingcolor", "Color for blue engie buildings", CookieAccess_Protected);
 
-	g_CustomColorCookieR = RegClientCookie("donator_buildingcustomcolorR", "Custom Color R", CookieAccess_Public);
-	g_CustomColorCookieG = RegClientCookie("donator_buildingcustomcolorG", "Custom Color G", CookieAccess_Public);
-	g_CustomColorCookieB = RegClientCookie("donator_buildingcustomcolorB", "Custom Color B", CookieAccess_Public);
-	g_CustomColorCookieA = RegClientCookie("donator_buildingcustomcolorA", "Custom Color A", CookieAccess_Public);
+	g_CustomColorCookieR = RegClientCookie("donator_buildingcustomcolorR", "Custom Color R", CookieAccess_Protected);
+	g_CustomColorCookieG = RegClientCookie("donator_buildingcustomcolorG", "Custom Color G", CookieAccess_Protected);
+	g_CustomColorCookieB = RegClientCookie("donator_buildingcustomcolorB", "Custom Color B", CookieAccess_Protected);
+	g_CustomColorCookieA = RegClientCookie("donator_buildingcustomcolorA", "Custom Color A", CookieAccess_Protected);
 
 	HookEvent("player_builtobject", Event_BuiltObject);
 
@@ -87,6 +85,11 @@ public OnAllPluginsLoaded()
 	}
 	Donator_RegisterMenuItem("Change Red Building Color", ChangeBuildingRedColorCallback);
 	Donator_RegisterMenuItem("Change Blue Building Color", ChangeBuildingBlueColorCallback);
+	Donator_RegisterMenuItem("Custom (R)GBA", ChangeBuildingCustomCallbackR);
+	Donator_RegisterMenuItem("Custom R(G)BA", ChangeBuildingCustomCallbackG);
+	Donator_RegisterMenuItem("Custom RG(B)A", ChangeBuildingCustomCallbackB);
+	Donator_RegisterMenuItem("Custom RGB(A)", ChangeBuildingCustomCallbackA);
+
 }
 
 public DonatorMenu:ChangeBuildingRedColorCallback(iClient)
@@ -97,6 +100,23 @@ public DonatorMenu:ChangeBuildingRedColorCallback(iClient)
 public DonatorMenu:ChangeBuildingBlueColorCallback(iClient)
 {
 	Menu_ChangeBuildingBlueColor(iClient);
+}
+
+public DonatorMenu:ChangeBuildingCustomCallbackR(iClient)
+{
+	Menu_ChangeBuildingCustomColor(iClient, 0);
+}
+public DonatorMenu:ChangeBuildingCustomCallbackG(iClient)
+{
+	Menu_ChangeBuildingCustomColor(iClient, 1);
+}
+public DonatorMenu:ChangeBuildingCustomCallbackB(iClient)
+{
+	Menu_ChangeBuildingCustomColor(iClient, 2);
+}
+public DonatorMenu:ChangeBuildingCustomCallbackA(iClient)
+{
+	Menu_ChangeBuildingCustomColor(iClient, 3);
 }
 
 public Action:Menu_ChangeBuildingRedColor(iClient)
@@ -131,6 +151,7 @@ public Action:Menu_ChangeBuildingRedColor(iClient)
 	AddMenuItem(menu, "24", "Tan");
 	AddMenuItem(menu, "25", "Tomato");
 	AddMenuItem(menu, "26", "Based on Cookie");
+	AddMenuItem(menu, "27", "Based on Cookie Alpha");
 	
 	DisplayMenu(menu, iClient, 20);
 }
@@ -167,8 +188,114 @@ public Action:Menu_ChangeBuildingBlueColor(iClient)
 	AddMenuItem(menu, "24", "Tan");
 	AddMenuItem(menu, "25", "Tomato");
 	AddMenuItem(menu, "26", "Based on Cookie");
+	AddMenuItem(menu, "27", "Based on Cookie Alpha");
 
 	DisplayMenu(menu, iClient, 20);
+}
+
+public Action:Menu_ChangeBuildingCustomColor(iClient, iChannel)
+{
+	new Handle:menu = INVALID_HANDLE;
+
+	switch(iChannel)
+	{
+		case 0: {
+			menu = CreateMenu(BuildingCustomColorMenuSelectedR);
+			SetMenuTitle(menu, "Channel Value - Red");
+			}
+		case 1: {
+			menu = CreateMenu(BuildingCustomColorMenuSelectedG);
+			SetMenuTitle(menu, "Channel Value - Green");
+			}
+		case 2: {
+			menu = CreateMenu(BuildingCustomColorMenuSelectedB);
+			SetMenuTitle(menu, "Channel Value - Blue");
+			}
+		case 3: {
+			menu = CreateMenu(BuildingCustomColorMenuSelectedA);
+			SetMenuTitle(menu, "Channel Value - Alpha");
+			}
+	}
+
+	AddMenuItem(menu, "0", "0");
+	AddMenuItem(menu, "32", "32");
+	AddMenuItem(menu, "64", "64");
+	AddMenuItem(menu, "96", "96");
+	AddMenuItem(menu, "128", "128");
+	AddMenuItem(menu, "160", "160");
+	AddMenuItem(menu, "192", "192");
+	AddMenuItem(menu, "224", "224");
+	AddMenuItem(menu, "255", "255");
+	
+	DisplayMenu(menu, iClient, 20);
+}
+
+public BuildingCustomColorMenuSelectedR(Handle:menu, MenuAction:action, iClient, param2)
+{
+	if(action == MenuAction_End)
+	{
+		CloseHandle(menu);
+	}
+
+	if(action == MenuAction_Select)
+	{
+		decl String:info[12];
+		GetMenuItem(menu, param2, info, sizeof(info));
+		g_CustomColorR[iClient] = StringToInt(info);
+		UpdateExistingBuildings(iClient);
+		SetClientCookie(iClient, g_CustomColorCookieR, info);
+	}
+}
+
+public BuildingCustomColorMenuSelectedG(Handle:menu, MenuAction:action, iClient, param2)
+{
+	if(action == MenuAction_End)
+	{
+		CloseHandle(menu);
+	}
+
+	if(action == MenuAction_Select)
+	{
+		decl String:info[12];
+		GetMenuItem(menu, param2, info, sizeof(info));
+		g_CustomColorG[iClient] = StringToInt(info);
+		UpdateExistingBuildings(iClient);
+		SetClientCookie(iClient, g_CustomColorCookieG, info);
+	}
+}
+
+public BuildingCustomColorMenuSelectedB(Handle:menu, MenuAction:action, iClient, param2)
+{
+	if(action == MenuAction_End)
+	{
+		CloseHandle(menu);
+	}
+
+	if(action == MenuAction_Select)
+	{
+		decl String:info[12];
+		GetMenuItem(menu, param2, info, sizeof(info));
+		g_CustomColorB[iClient] = StringToInt(info);
+		UpdateExistingBuildings(iClient);
+		SetClientCookie(iClient, g_CustomColorCookieB, info);
+	}
+}
+
+public BuildingCustomColorMenuSelectedA(Handle:menu, MenuAction:action, iClient, param2)
+{
+	if(action == MenuAction_End)
+	{
+		CloseHandle(menu);
+	}
+
+	if(action == MenuAction_Select)
+	{
+		decl String:info[12];
+		GetMenuItem(menu, param2, info, sizeof(info));
+		g_CustomColorA[iClient] = StringToInt(info);
+		UpdateExistingBuildings(iClient);
+		SetClientCookie(iClient, g_CustomColorCookieA, info);
+	}
 }
 
 public BuildingRedColorMenuSelected(Handle:menu, MenuAction:action, iClient, param2)
@@ -204,6 +331,7 @@ public BuildingBlueColorMenuSelected(Handle:menu, MenuAction:action, iClient, pa
 		SetClientCookie(iClient, g_BlueColorCookie, info);
 	}
 }
+
 
 public OnClientPostAdminCheck(iClient)
 {
@@ -288,6 +416,7 @@ stock SetBuildingColor(iBuilding, iOwner)
 		case 24: SetEntityRenderColor(iBuilding, 210, 180, 140, _);
 		case 25: SetEntityRenderColor(iBuilding, 255, 99, 71, _);
 		case 26: SetEntityRenderColor(iBuilding, g_CustomColorR[iOwner], g_CustomColorG[iOwner], g_CustomColorB[iOwner], _);
+		case 27: SetEntityRenderColor(iBuilding, g_CustomColorR[iOwner], g_CustomColorG[iOwner], g_CustomColorB[iOwner], g_CustomColorA[iOwner]);
 		}
 	}
 	// Blue?
@@ -321,6 +450,7 @@ stock SetBuildingColor(iBuilding, iOwner)
 		case 24: SetEntityRenderColor(iBuilding, 210, 180, 140, _);
 		case 25: SetEntityRenderColor(iBuilding, 255, 99, 71, _);
 		case 26: SetEntityRenderColor(iBuilding, g_CustomColorR[iOwner], g_CustomColorG[iOwner], g_CustomColorB[iOwner], _);
+		case 27: SetEntityRenderColor(iBuilding, g_CustomColorR[iOwner], g_CustomColorG[iOwner], g_CustomColorB[iOwner], g_CustomColorA[iOwner]);
 		}
 	}
 }
@@ -358,24 +488,4 @@ public Action:Event_BuiltObject(Handle:event, const String:name[], bool:dontBroa
 		SetBuildingColor(iBuilding, iClient);
 	}
 	return Plugin_Continue;
-}
-
-public Action:cmd_ReloadCustomColor(iClient, args)
-{
-	ReplyToCommand(iClient, "[SM] Custom building color setting...");
-
-	new String:szBuffer[8];
-
-	GetClientCookie(iClient, g_CustomColorCookieR, szBuffer, sizeof(szBuffer));
-	g_CustomColorR[iClient] = StringToInt(szBuffer);
-	GetClientCookie(iClient, g_CustomColorCookieG, szBuffer, sizeof(szBuffer));
-	g_CustomColorG[iClient] = StringToInt(szBuffer);
-	GetClientCookie(iClient, g_CustomColorCookieB, szBuffer, sizeof(szBuffer));
-	g_CustomColorB[iClient] = StringToInt(szBuffer);
-	GetClientCookie(iClient, g_CustomColorCookieA, szBuffer, sizeof(szBuffer));
-	g_CustomColorA[iClient] = StringToInt(szBuffer);
-
-	UpdateExistingBuildings(iClient);
-
-	ReplyToCommand(iClient, "[SM] Custom building color set to:");
 }
