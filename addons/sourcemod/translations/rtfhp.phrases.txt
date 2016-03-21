@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Report player"
+	{
+		"en"	"Report Player"
+	}
+	"Report Reason"
+	{
+		"en"	"Reason?"
+	}
+	"Aimbot"
+	{
+		"en"	"Aimbot"
+	}
+	"Wallhacking"
+	{
+		"en"	"Wallhacking"
+	}
+	"General Hacking"
+	{
+		"en"	"General Hacking"
+	}
+	"Offensive Chat"
+	{
+		"en"	"Offensive Chat"
+	}
+	"Offensive Name"
+	{
+		"en"	"Offensive Name"
+	}
+	"Voice Spam"
+	{
+		"en"	"Voice Spam"
+	}
+	"Trolling"
+	{
+		"en"	"Trolling"
+	}
+	"Server Rule Break"
+	{
+		"en"	"Server Rule Break"
+	}
+}
