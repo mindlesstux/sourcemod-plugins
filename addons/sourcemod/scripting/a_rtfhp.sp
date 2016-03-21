@@ -5,12 +5,14 @@
 #define AUTOLOAD_EXTENSIONS
 #define REQUIRE_EXTENSIONS
 #include <steamtools>
+//https://forums.alliedmods.net/showthread.php?t=280402
+#include "sourcetvmanager"
 
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
 #include <updater>
 
-new const String:PLUGIN_VERSION[] = "0.0.1";
+new const String:PLUGIN_VERSION[] = "0.0.5";
 new const String:UPDATE_URL[] = "https://mindlesstux.com/sourcemod/rtfhp/rtfhp.update.txt";
 new g_ReportTarget[MAXPLAYERS+1];
 
@@ -55,13 +57,14 @@ RegisterCvars( )
 	g_Cvar_HTTPAPIKey = CreateConVar("rtfhp_apikey", "cb0875365a5ec054ce49a691801dc6a711efffbc", "API Key set in Endpoint", FCVAR_PLUGIN|FCVAR_PROTECTED|FCVAR_DONTRECORD|FCVAR_REPLICATED|FCVAR_PRINTABLEONLY);
 
 	// TODO: Add to this so rtfhp_target and rtfhp_apikey get loaded into the cfg on generation
-	AutoExecConfig(true, "rtfhp");
+	//AutoExecConfig(true, "rtfhp");
 }
 
 RegisterCmds( )
 {
 	// Report CMD
 	RegConsoleCmd("sm_report2", Command_ReportUser, "Report a player to the forums.");
+	//RegConsoleCmd("sm_report2menu", AdminMenu_Report, "Report a player to the forums.");
 }
 
 public OnAdminMenuReady(Handle aTopMenu)
@@ -105,21 +108,24 @@ public OnConfigsExecuted()
 
 // Make HTTP call
 public SendHTTPRequest(iClient, iTarget, char[] iReason) {
-	
 	// Create the HTTP request
 	new String:g_szAPITarget[128];
 	GetConVarString(g_Cvar_HTTPTarget, g_szAPITarget, sizeof(g_szAPITarget));
 	new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, g_szAPITarget);
 
+	PrintToServer("[RTFHP] URL: %s", g_szAPITarget);
+
 	// Base information we need
 	new String:g_szAPIKey[64];
 	GetConVarString(g_Cvar_HTTPAPIKey, g_szAPIKey, sizeof(g_szAPIKey));
 	Steam_SetHTTPRequestGetOrPostParameter(request, "apikey", g_szAPIKey);
-	
+
+	Steam_SetHTTPRequestGetOrPostParameter(request, "reason", iReason);
+
 	new String:g_szHostname[128];
 	GetConVarString(FindConVar("hostname"), g_szHostname, sizeof(g_szHostname));
 	Steam_SetHTTPRequestGetOrPostParameter(request, "hostname", g_szHostname);
-	
+
 	new String:g_szHostport[6];
 	GetConVarString(FindConVar("hostport"), g_szHostport, sizeof(g_szHostport));
 	Steam_SetHTTPRequestGetOrPostParameter(request, "hostport", g_szHostport);
@@ -146,12 +152,26 @@ public SendHTTPRequest(iClient, iTarget, char[] iReason) {
 	Steam_SetHTTPRequestGetOrPostParameter(request, "target_ip", g_szTIP);
 	Steam_SetHTTPRequestGetOrPostParameter(request, "report_ip", g_szCIP);
 
-	new String:g_szTSteamID[32];
-	new String:g_szCSteamID[32];
-	GetClientAuthId(iTarget, AuthId_Engine, g_szTSteamID, sizeof(g_szTSteamID));
-	GetClientAuthId(iClient, AuthId_Engine, g_szCSteamID, sizeof(g_szCSteamID));
-	Steam_SetHTTPRequestGetOrPostParameter(request, "target_steamid", g_szTSteamID);
-	Steam_SetHTTPRequestGetOrPostParameter(request, "report_steamid", g_szCSteamID);
+	new String:g_szTSteamID2[32];
+	new String:g_szCSteamID2[32];
+	GetClientAuthId(iTarget, AuthId_Steam2, g_szTSteamID2, sizeof(g_szTSteamID2));
+	GetClientAuthId(iClient, AuthId_Steam2, g_szCSteamID2, sizeof(g_szCSteamID2));
+	Steam_SetHTTPRequestGetOrPostParameter(request, "target_steamid2", g_szTSteamID2);
+	Steam_SetHTTPRequestGetOrPostParameter(request, "report_steamid2", g_szCSteamID2);
+
+	new String:g_szTSteamID3[32];
+	new String:g_szCSteamID3[32];
+	GetClientAuthId(iTarget, AuthId_Steam3, g_szTSteamID3, sizeof(g_szTSteamID3));
+	GetClientAuthId(iClient, AuthId_Steam3, g_szCSteamID3, sizeof(g_szCSteamID3));
+	Steam_SetHTTPRequestGetOrPostParameter(request, "target_steamid3", g_szTSteamID3);
+	Steam_SetHTTPRequestGetOrPostParameter(request, "report_steamid3", g_szCSteamID3);
+
+	new String:g_szTSteamID64[32];
+	new String:g_szCSteamID64[32];
+	GetClientAuthId(iTarget, AuthId_SteamID64, g_szTSteamID64, sizeof(g_szTSteamID64));
+	GetClientAuthId(iClient, AuthId_SteamID64, g_szCSteamID64, sizeof(g_szCSteamID64));
+	Steam_SetHTTPRequestGetOrPostParameter(request, "target_steamid64", g_szTSteamID64);
+	Steam_SetHTTPRequestGetOrPostParameter(request, "report_steamid64", g_szCSteamID64);
 
 	new String:g_szTName[32];
 	new String:g_szCName[32];
@@ -159,6 +179,19 @@ public SendHTTPRequest(iClient, iTarget, char[] iReason) {
 	GetClientName(iClient, g_szCName, sizeof(g_szCName));
 	Steam_SetHTTPRequestGetOrPostParameter(request, "target_name", g_szTName);
 	Steam_SetHTTPRequestGetOrPostParameter(request, "report_name", g_szCName);
+
+	if (SourceTV_IsRecording())
+	{
+		new String:sFileName[PLATFORM_MAX_PATH];
+		SourceTV_GetDemoFileName(sFileName, sizeof(sFileName));
+		Steam_SetHTTPRequestGetOrPostParameter(request, "demo_file", sFileName);
+		
+		int iTickNum;
+		iTickNum = SourceTV_GetRecordingTick();
+		new String:sTickNum[8];
+		IntToString(iTickNum, sTickNum, sizeof(sTickNum));
+		Steam_SetHTTPRequestGetOrPostParameter(request, "demo_tick", sTickNum);
+	}
 
 	
 	// For the LOLz
