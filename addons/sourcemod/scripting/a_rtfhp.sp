@@ -12,7 +12,7 @@
 #include <adminmenu>
 #include <updater>
 
-new const String:PLUGIN_VERSION[] = "0.0.5";
+new const String:PLUGIN_VERSION[] = "0.0.6";
 new const String:UPDATE_URL[] = "https://mindlesstux.com/sourcemod/rtfhp/rtfhp.update.txt";
 new g_ReportTarget[MAXPLAYERS+1];
 
@@ -33,7 +33,7 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-	LoadTranslations("reporttoforum.phrases");
+	LoadTranslations("rtfhp.phrases.txt");
 	
 	RegisterCvars( );
 	RegisterCmds( );

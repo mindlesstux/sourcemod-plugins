@@ -36,6 +36,7 @@
 #include <sourcemod>
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
+#include <sourceirc>
 
 public Plugin:myinfo =
 {
@@ -93,6 +94,9 @@ public OnPluginStart()
 	ProtectVar("rcon_password");
 	ProtectVar("sm_show_activity");
 	ProtectVar("sm_immunity_mode");
+
+	IRC_MsgFlaggedChannels("ircnoteKick", "Notify channels of admin kick");
+	IRC_MsgFlaggedChannels("ircnoteMap", "Notify channels of admin map change");
 }
 
 public OnMapStart()
@@ -104,6 +108,28 @@ public OnConfigsExecuted()
 {
 	LoadMapList(g_MapList);
 }
+
+public OnAllPluginsLoaded()
+{
+	if (LibraryExists("sourceirc"))
+	{
+		IRC_Loaded();
+	}
+}
+
+public OnLibraryAdded(const String:name[])
+{
+	if (StrEqual(name, "sourceirc", false))
+	{
+		IRC_Loaded();
+	}
+}
+
+IRC_Loaded()
+{
+	IRC_CleanUp();
+}
+
 
 ProtectVar(const String:cvar[])
 {

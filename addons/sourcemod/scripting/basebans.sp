@@ -36,6 +36,7 @@
 #include <sourcemod>
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
+#include <sourceirc>
 
 public Plugin:myinfo =
 {
@@ -82,6 +83,28 @@ public OnPluginStart()
 	{
 		OnAdminMenuReady(topmenu);
 	}
+	IRC_MsgFlaggedChannels("ircnoteBan", "Notify channels of admin ban");
+}
+
+public OnAllPluginsLoaded()
+{
+	if (LibraryExists("sourceirc"))
+	{
+		IRC_Loaded();
+	}
+}
+
+public OnLibraryAdded(const String:name[])
+{
+	if (StrEqual(name, "sourceirc", false))
+	{
+		IRC_Loaded();
+	}
+}
+
+IRC_Loaded()
+{
+	IRC_CleanUp();
 }
 
 public OnMapStart()

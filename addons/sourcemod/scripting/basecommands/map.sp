@@ -100,6 +100,13 @@ public Action:Command_Map(client, args)
 
 	LogAction(client, -1, "\"%L\" changed map to \"%s\"", client, map);
 
+	// SourceIRC support
+	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
+	{
+		IRC_MsgFlaggedChannels("ircnoteMap", "[SM-Map] \"%L\" changed map to \"%s\"", client, map);
+	}
+
+
 	new Handle:dp;
 	CreateDataTimer(3.0, Timer_ChangeMap, dp);
 	WritePackString(dp, map);

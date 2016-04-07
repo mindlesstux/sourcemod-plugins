@@ -228,6 +228,12 @@ PerformMute(client, target, bool:silent=false)
 	{
 		LogAction(client, target, "\"%L\" muted \"%L\"", client, target);
 	}
+
+	// SourceIRC support
+	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
+	{
+		IRC_MsgFlaggedChannels("ircnoteMute", "[SM-Mute] \"%L\" muted \"%L\"", client, target);
+	}
 }
 
 PerformUnMute(client, target, bool:silent=false)
@@ -247,10 +253,15 @@ PerformUnMute(client, target, bool:silent=false)
 	}
 	
 	FireOnClientMute(target, false);
-	
+
 	if (!silent)
 	{
 		LogAction(client, target, "\"%L\" unmuted \"%L\"", client, target);
+	}
+	// SourceIRC support
+	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
+	{
+		IRC_MsgFlaggedChannels("ircnoteMute", "[SM-Mute] \"%L\" unmuted \"%L\"", client, target);
 	}
 }
 
@@ -263,6 +274,11 @@ PerformGag(client, target, bool:silent=false)
 	{
 		LogAction(client, target, "\"%L\" gagged \"%L\"", client, target);
 	}
+	// SourceIRC support
+	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
+	{
+		IRC_MsgFlaggedChannels("ircnoteGag", "[SM-Gag] \"%L\" gagged \"%L\"", client, target);
+	}
 }
 
 PerformUnGag(client, target, bool:silent=false)
@@ -273,6 +289,11 @@ PerformUnGag(client, target, bool:silent=false)
 	if (!silent)
 	{
 		LogAction(client, target, "\"%L\" ungagged \"%L\"", client, target);
+	}
+	// SourceIRC support
+	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
+	{
+		IRC_MsgFlaggedChannels("ircnoteGag", "[SM-Gag] \"%L\" gagged \"%L\"", client, target);
 	}
 }
 
@@ -292,6 +313,12 @@ PerformSilence(client, target)
 	}
 	
 	LogAction(client, target, "\"%L\" silenced \"%L\"", client, target);
+
+	// SourceIRC support
+	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
+	{
+		IRC_MsgFlaggedChannels("ircnoteMute", "[SM-Silence] \"%L\" silenced \"%L\"", client, target);
+	}
 }
 
 PerformUnSilence(client, target)
@@ -322,6 +349,11 @@ PerformUnSilence(client, target)
 	}
 	
 	LogAction(client, target, "\"%L\" unsilenced \"%L\"", client, target);
+	// SourceIRC support
+	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
+	{
+		IRC_MsgFlaggedChannels("ircnoteMute", "[SM-Silence] \"%L\" unsilenced \"%L\"", client, target);
+	}
 }
 
 public Action:Command_Mute(client, args)

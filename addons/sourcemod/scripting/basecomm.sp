@@ -35,6 +35,7 @@
 #include <sdktools>
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
+#include <sourceirc>
 
 #pragma semicolon 1
 
@@ -98,6 +99,31 @@ public OnPluginStart()
 	{
 		OnAdminMenuReady(topmenu);
 	}
+
+	IRC_MsgFlaggedChannels("ircnoteGag", "Notify channels of admin gag");
+	IRC_MsgFlaggedChannels("ircnoteMute", "Notify channels of admin mute");
+	IRC_MsgFlaggedChannels("ircnoteSilence", "Notify channels of admin silence");
+}
+
+public OnAllPluginsLoaded()
+{
+	if (LibraryExists("sourceirc"))
+	{
+		IRC_Loaded();
+	}
+}
+
+public OnLibraryAdded(const String:name[])
+{
+	if (StrEqual(name, "sourceirc", false))
+	{
+		IRC_Loaded();
+	}
+}
+
+IRC_Loaded()
+{
+	IRC_CleanUp();
 }
 
 public OnAdminMenuReady(Handle aTopMenu)

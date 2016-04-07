@@ -35,6 +35,21 @@ PerformKick(client, target, const String:reason[])
 {
 	LogAction(client, target, "\"%L\" kicked \"%L\" (reason \"%s\")", client, target, reason);
 
+	// SourceIRC support
+	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
+	{
+		new String:g_szTIP[16];
+		new String:g_szCIP[16];
+		GetClientIP(target, g_szTIP, sizeof(g_szTIP));
+		GetClientIP(client, g_szCIP, sizeof(g_szCIP));
+		new String:g_szTSteamID2[32];
+		new String:g_szCSteamID2[32];
+		GetClientAuthId(target, AuthId_Steam2, g_szTSteamID2, sizeof(g_szTSteamID2));
+		GetClientAuthId(client, AuthId_Steam2, g_szCSteamID2, sizeof(g_szCSteamID2));
+		IRC_MsgFlaggedChannels("ircnoteKick", "[SM-Kick] %L (%s/%s) kicked %L (%s/%s) for \"%s\" ", client, g_szCSteamID2, g_szCIP, target, g_szTSteamID2, g_szTIP, reason);
+	}
+
+
 	if (reason[0] == '\0')
 	{
 		KickClient(target, "%t", "Kicked by admin");

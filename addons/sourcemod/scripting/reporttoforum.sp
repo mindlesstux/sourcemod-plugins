@@ -4,6 +4,7 @@
 
 #undef REQUIRE_PLUGIN
 #include <updater>
+#include <sourceirc>
 
 #define RTF_ROOT "cfg/rtf_configs"
 
@@ -304,6 +305,8 @@ public OnPluginStart()
 	{
 		LogError("Missing rtf-rules.txt. Check Dir: %s", RTF_ROOT);
 	}
+
+	IRC_MsgFlaggedChannels("ircnoteRTF", "Notify channels of ingame reports");
 }
 
 /* Updater Settings On Late Load */
@@ -313,6 +316,22 @@ public OnLibraryAdded(const String:szName[])
 	{
 		Updater_AddPlugin(UPDATE_URL);
 	}
+	if (StrEqual(szName, "sourceirc", false))
+	{
+		IRC_Loaded();
+	}
+}
+public OnAllPluginsLoaded()
+{
+	if (LibraryExists("sourceirc"))
+	{
+		IRC_Loaded();
+	}
+}
+
+IRC_Loaded()
+{
+	IRC_CleanUp();
 }
 
 public OnConfigsExecuted()
@@ -1647,7 +1666,16 @@ stock AlertAdmins(iClient)
 			PrintToChat(i, "[%s] %s has been reported: %s by %N", g_szPrefix, g_szSafeTargetName[iClient], g_szReason[iClient], iClient);
 		}
 	}
+
+	// SourceIRC support
+	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
+	{
+
+		IRC_MsgFlaggedChannels("ircnoteRTF", "[%s] %s has been reported for \"%s\" by %N", g_szPrefix, g_szSafeTargetName[iClient], g_szReason[iClient], iClient);
+	}
 }
+
+
 
 public CreateDebugFile(iClient)
 {
