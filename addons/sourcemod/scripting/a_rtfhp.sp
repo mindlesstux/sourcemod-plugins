@@ -9,18 +9,23 @@
 #include "sourcetvmanager"
 
 #undef REQUIRE_PLUGIN
-#include <adminmenu>
 #include <updater>
 
-new const String:PLUGIN_VERSION[] = "0.0.6";
+new const String:PLUGIN_VERSION[] = "0.0.7";
 new const String:UPDATE_URL[] = "https://mindlesstux.com/sourcemod/rtfhp/rtfhp.update.txt";
 new g_ReportTarget[MAXPLAYERS+1];
 
 new Handle:g_Cvar_HTTPTarget = INVALID_HANDLE;
 new Handle:g_Cvar_HTTPAPIKey = INVALID_HANDLE;
+new Handle:g_Cvar_NotifyInGameAdmins = INVALID_HANDLE;
 
-// Admin Menu
-TopMenu hTopMenu;
+/*
+TODO:
+-Create the menu
+-Handle http returns and error codes
+-Inform admins (if set) as the person is submitting the report
+
+*/
 
 public Plugin:myinfo = 
 {
@@ -37,14 +42,6 @@ public OnPluginStart()
 	
 	RegisterCvars( );
 	RegisterCmds( );
-
-	/* Account for late loading */
-	TopMenu topmenu;
-	if (LibraryExists("adminmenu") && ((topmenu = GetAdminTopMenu()) != null))
-	{
-		OnAdminMenuReady(topmenu);
-	}
-
 }
 
 RegisterCvars( )
@@ -56,6 +53,9 @@ RegisterCvars( )
 	g_Cvar_HTTPTarget = CreateConVar("rtfhp_target", "https://www.example.com/rtfhp.php", "URL of API Endpoint", FCVAR_PLUGIN|FCVAR_PROTECTED|FCVAR_DONTRECORD|FCVAR_REPLICATED|FCVAR_PRINTABLEONLY);
 	g_Cvar_HTTPAPIKey = CreateConVar("rtfhp_apikey", "cb0875365a5ec054ce49a691801dc6a711efffbc", "API Key set in Endpoint", FCVAR_PLUGIN|FCVAR_PROTECTED|FCVAR_DONTRECORD|FCVAR_REPLICATED|FCVAR_PRINTABLEONLY);
 
+	// Use this to figure out if the admins in game should be notified of every step of the report process or not
+	g_Cvar_NotifyInGameAdmins = CreateConVar("rtfhp_notifyingameadmins", "1", "Notify admins ingame of 'in-flight' report status", FCVAR_PLUGIN|FCVAR_PROTECTED|FCVAR_DONTRECORD|FCVAR_REPLICATED|FCVAR_PRINTABLEONLY, _, true, 0.0, true, 1.0);
+
 	// TODO: Add to this so rtfhp_target and rtfhp_apikey get loaded into the cfg on generation
 	//AutoExecConfig(true, "rtfhp");
 }
@@ -63,32 +63,8 @@ RegisterCvars( )
 RegisterCmds( )
 {
 	// Report CMD
-	RegConsoleCmd("sm_report2", Command_ReportUser, "Report a player to the forums.");
-	//RegConsoleCmd("sm_report2menu", AdminMenu_Report, "Report a player to the forums.");
+	RegConsoleCmd("sm_rtf", Menu_RTF_1, "Report a player to the forums.");
 }
-
-public OnAdminMenuReady(Handle aTopMenu)
-{
-	TopMenu topmenu = TopMenu.FromHandle(aTopMenu);
-
-	/* Block us from being called twice */
-	if (topmenu == hTopMenu)
-	{
-		return;
-	}
-	
-	/* Save the Handle */
-	hTopMenu = topmenu;
-	
-	/* Find the "Player Commands" category */
-	TopMenuObject player_commands = hTopMenu.FindCategory(ADMINMENU_PLAYERCOMMANDS);
-
-	if (player_commands != INVALID_TOPMENUOBJECT)
-	{
-		hTopMenu.AddItem("sm_report2", AdminMenu_Report, player_commands, "sm_report2");
-	}
-}
-
 
 public OnLibraryAdded(const String:szName[])
 {
@@ -113,7 +89,7 @@ public SendHTTPRequest(iClient, iTarget, char[] iReason) {
 	GetConVarString(g_Cvar_HTTPTarget, g_szAPITarget, sizeof(g_szAPITarget));
 	new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, g_szAPITarget);
 
-	PrintToServer("[RTFHP] URL: %s", g_szAPITarget);
+	//PrintToServer("[RTFHP] URL: %s", g_szAPITarget);
 
 	// Base information we need
 	new String:g_szAPIKey[64];
@@ -218,144 +194,8 @@ stock GetCurrentWorkshopMap(String:szMap[], iMapBuf, String:szWorkShopID[], iWor
 	strcopy(szWorkShopID, iWorkShopBuf, szCurMapSplit[0]);
 }
 
-/* MENU STUFF */
-public AdminMenu_Report(Handle:topmenu, TopMenuAction:action, TopMenuObject:object_id, param, String:buffer[], maxlength)
-{
-	if (action == TopMenuAction_DisplayOption)
-	{
-		Format(buffer, maxlength, "%T", "Report player", param);
-	}
-	else if (action == TopMenuAction_SelectOption)
-	{
-		DisplayReportMenu(param);
-	}
-}
-DisplayReportMenu(client)
-{
-	Menu menu = CreateMenu(MenuHandler_Report);
-	
-	decl String:title[100];
-	Format(title, sizeof(title), "%T:", "Report player", client);
-	menu.SetTitle(title);
-	menu.ExitBackButton = true;
-	
-	AddTargetsToMenu(menu, client, true, true);
-	
-	menu.Display(client, MENU_TIME_FOREVER);
-}
-DisplayReportTypeMenu(client)
-{
-	Menu menu = CreateMenu(MenuHandler_ReportType);
-	
-	decl String:title[100];
-	Format(title, sizeof(title), "%T: %N", "Report Reason", client, GetClientOfUserId(g_ReportTarget[client]));
-	menu.SetTitle(title);
-	menu.ExitBackButton = true;
-	
-	AddTranslatedMenuItem(menu, "aimbot",      "Aimbot", client);
-	AddTranslatedMenuItem(menu, "wallhack",    "Wallhacking", client);
-	AddTranslatedMenuItem(menu, "hacking",     "General Hacking", client);
-	AddTranslatedMenuItem(menu, "offensechat", "Offensive Chat", client);
-	AddTranslatedMenuItem(menu, "offensename", "Offensive Name", client);
-	AddTranslatedMenuItem(menu, "voicespam",   "Voice Spam", client);
-	AddTranslatedMenuItem(menu, "trolling",    "Trolling", client);
-	AddTranslatedMenuItem(menu, "rulebreak",   "Server Rule Break", client);
-	
-	menu.Display(client, MENU_TIME_FOREVER);
-}
-
-public MenuHandler_Report(Menu menu, MenuAction action, int param1, int param2)
-{
-	if (action == MenuAction_End)
-	{
-		delete menu;
-	}
-	else if (action == MenuAction_Cancel)
-	{
-		if (param2 == MenuCancel_ExitBack && hTopMenu)
-		{
-			hTopMenu.Display(param1, TopMenuPosition_LastCategory);
-		}
-	}
-	else if (action == MenuAction_Select)
-	{
-		decl String:info[32];
-		new userid, target;
-		
-		menu.GetItem(param2, info, sizeof(info));
-		userid = StringToInt(info);
-
-		if ((target = GetClientOfUserId(userid)) == 0)
-		{
-			PrintToChat(param1, "[SM] %t", "Player no longer available");
-		}
-		else if (!CanUserTarget(param1, target))
-		{
-			PrintToChat(param1, "[SM] %t", "Unable to target");
-		}
-		else
-		{
-			g_ReportTarget[param1] = userid;
-			DisplayReportTypeMenu(param1);
-			return;	// Return, because we went to a new menu and don't want the re-draw to occur.
-		}
-		
-		/* Re-draw the menu if they're still valid */
-		if (IsClientInGame(param1) && !IsClientInKickQueue(param1))
-		{
-			DisplayReportMenu(param1);
-		}
-	}
-	
-	return;
-}
-
-public MenuHandler_ReportType(Menu menu, MenuAction action, int param1, int param2)
-{
-	if (action == MenuAction_End)
-	{
-		delete menu;
-	}
-	else if (action == MenuAction_Cancel)
-	{
-		if (param2 == MenuCancel_ExitBack && hTopMenu)
-		{
-			hTopMenu.Display(param1, TopMenuPosition_LastCategory);
-		}
-	}
-	else if (action == MenuAction_Select)
-	{
-		decl String:info[32];
-		new target;
-		
-		menu.GetItem(param2, info, sizeof(info));
-
-		if ((target = GetClientOfUserId(g_ReportTarget[param1])) == 0)
-		{
-			PrintToChat(param1, "[SM] %t", "Player no longer available");
-		}
-		else if (!CanUserTarget(param1, target))
-		{
-			PrintToChat(param1, "[SM] %t", "Unable to target");
-		}
-		else
-		{
-			new String:name[32];
-			GetClientName(target, name, sizeof(name));
-			
-			//PerformGravity(param1, target, amount);
-			SendHTTPRequest(param1, target, info);
-		}
-	}
-}
-
-void AddTranslatedMenuItem(Menu menu, const char[] opt, const char[] phrase, int client)
-{
-	char buffer[128];
-	Format(buffer, sizeof(buffer), "%T", phrase, client);
-	menu.AddItem(opt, buffer);
-}
-
+/*
+// Just make it a menu item... Keeping code for reference later or use if needed
 public Action:Command_ReportUser(client, args)
 {
 	if (args < 1)
@@ -382,5 +222,49 @@ public Action:Command_ReportUser(client, args)
 		SendHTTPRequest(client, target_list[i], arg);
 	}
 	
+	return Plugin_Handled;
+}
+*/
+
+// https://wiki.alliedmods.net/Menus_Step_By_Step_(SourceMod_Scripting)#The_working_menu_example
+public MenuHandler(Handle:menu, MenuAction:action, param1, param2)
+{
+	switch(action)
+	{
+
+		case MenuAction_Select:
+		{
+			decl String:info[32];
+			GetMenuItem(menu, param2, info, sizeof(info));
+			PrintToServer("Client %d selected %s", param1, info);
+		}
+
+		case MenuAction_Cancel:
+		{
+			PrintToServer("Client %d's menu was cancelled for reason %d", param1, param2);
+		}
+	}
+ 
+	return 0;
+}
+
+public Action:Menu_RTF_1(client, args)
+{
+	new Handle:menu = CreateMenu(MenuHandler, MenuAction_Select|MenuAction_Cancel);
+	SetMenuTitle(menu, "%T", "Report player", LANG_SERVER);
+
+	decl String:sName[MAX_NAME_LENGTH], String:sUserId[10];
+	for(new i=1;i<=MaxClients;i++)
+	{
+		if(IsClientInGame(i))
+		{
+			GetClientName(i, sName, sizeof(sName));
+			IntToString(GetClientUserId(i), sUserId, sizeof(sUserId));
+			AddMenuItem(menu, sUserId, sName);
+		}
+	}  
+
+	DisplayMenu(menu, client, 20);
+ 
 	return Plugin_Handled;
 }

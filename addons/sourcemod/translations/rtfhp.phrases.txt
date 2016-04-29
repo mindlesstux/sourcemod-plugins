@@ -8,6 +8,14 @@
 	{
 		"en"	"Reason?"
 	}
+	"HTTP Error"
+	{
+		"en"	"There was a error, please try again or create manual report at https://teamplayfirst.com."
+	}
+	"HTTP Success"
+	{
+		"en"	"Your report has been created and admins have been notified."
+	}
 	"Aimbot"
 	{
 		"en"	"Aimbot"
