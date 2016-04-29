@@ -1670,12 +1670,12 @@ public OnClientCookiesCached(client)
 public Action:Timer_PrefAnnounce(Handle:timer, any:id)
 {
 	new client;
-	
+	/*
 	if ((client = GetClientOfUserId(id)))
 	{
 		PrintToChat(client, "\x01\x04[SM]\x01 %t", "PrefAnnounce");
 	}
-	
+	*/
 	return Plugin_Handled;
 }
 
