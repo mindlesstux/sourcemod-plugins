@@ -180,6 +180,13 @@ public Plugin:myinfo =
 	url = "http://www.norcalbots.com/"
 };
 
+public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+{
+	MarkNativeAsOptional("IRC_MsgFlaggedChannels");
+
+	return APLRes_Success;
+}
+
 public OnPluginStart()
 {
 	/* Public Version Convar */
@@ -305,8 +312,6 @@ public OnPluginStart()
 	{
 		LogError("Missing rtf-rules.txt. Check Dir: %s", RTF_ROOT);
 	}
-
-	IRC_MsgFlaggedChannels("ircnoteRTF", "Notify channels of ingame reports");
 }
 
 /* Updater Settings On Late Load */
