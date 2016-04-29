@@ -70,7 +70,8 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 	CreateNative("BaseComm_SetClientGag",   Native_SetClientGag);
 	CreateNative("BaseComm_SetClientMute",  Native_SetClientMute);
 	RegPluginLibrary("basecomm");
-	
+	MarkNativeAsOptional("IRC_MsgFlaggedChannels");
+
 	return APLRes_Success;
 }
 
@@ -99,10 +100,6 @@ public OnPluginStart()
 	{
 		OnAdminMenuReady(topmenu);
 	}
-
-	IRC_MsgFlaggedChannels("ircnoteGag", "Notify channels of admin gag");
-	IRC_MsgFlaggedChannels("ircnoteMute", "Notify channels of admin mute");
-	IRC_MsgFlaggedChannels("ircnoteSilence", "Notify channels of admin silence");
 }
 
 public OnAllPluginsLoaded()

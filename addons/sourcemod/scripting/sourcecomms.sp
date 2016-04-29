@@ -225,7 +225,6 @@ public OnPluginStart()
     InitializeBackupDB();
 
     ServerInfo();
-
 }
 
 public OnLibraryRemoved(const String:name[])

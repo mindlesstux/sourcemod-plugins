@@ -30,10 +30,11 @@
 
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
-#tryinclude <updater>
+#include <sourceirc>
+//#tryinclude <updater>
 
-#define SB_VERSION "1.5.4.3F"
-#define SBR_VERSION "1.5.4.3"
+#define SB_VERSION "1.5.4.3F-1"
+#define SBR_VERSION "1.5.4.3-1"
 
 #if defined _updater_included
 #define UPDATE_URL "https://sarabveer.github.io/SourceBans-Fork/updater/updatefile.txt"
@@ -147,7 +148,8 @@ public bool:AskPluginLoad(Handle:myself, bool:late, String:error[], err_max)
 	RegPluginLibrary("sourcebans");
 	CreateNative("SBBanPlayer", Native_SBBanPlayer);
 	LateLoaded = late;
-	
+	MarkNativeAsOptional("IRC_MsgFlaggedChannels");
+
 	#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 3
 		return APLRes_Success;
 	#else
@@ -247,15 +249,19 @@ public OnPluginStart()
     	#endif
 }
 
-#if defined _updater_included
 public OnLibraryAdded(const String:name[])
 {
+#if defined _updater_included
     if (StrEqual(name, "updater"))
     {
         Updater_AddPlugin(UPDATE_URL);
     }
-}
 #endif
+    if (StrEqual(name, "sourceirc", false))
+    {
+        IRC_Loaded();
+    }
+}
 
 public OnAllPluginsLoaded()
 {
@@ -268,7 +274,17 @@ public OnAllPluginsLoaded()
 	{
 		OnAdminMenuReady(topmenu);
 	}
+	if (LibraryExists("sourceirc"))
+	{
+		IRC_Loaded();
+	}
 }
+
+IRC_Loaded()
+{
+	IRC_CleanUp();
+}
+
 
 public OnConfigsExecuted()
 {
@@ -1141,6 +1157,20 @@ public VerifyInsert(Handle:owner, Handle:hndl, const String:error[], any:dataPac
 
 	LogAction(admin, client, "\"%L\" banned \"%L\" (minutes \"%d\") (reason \"%s\")", admin, client, time, Reason);
 
+	// SourceIRC support
+	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
+	{
+		new String:g_szTIP[16];
+		new String:g_szCIP[16];
+		GetClientIP(client, g_szTIP, sizeof(g_szTIP));
+		GetClientIP(admin, g_szCIP, sizeof(g_szCIP));
+		new String:g_szTSteamID2[32];
+		new String:g_szCSteamID2[32];
+		GetClientAuthId(client, AuthId_Steam2, g_szTSteamID2, sizeof(g_szTSteamID2));
+		GetClientAuthId(admin, AuthId_Steam2, g_szCSteamID2, sizeof(g_szCSteamID2));
+		IRC_MsgFlaggedChannels("ircnoteBan", "[SM-Ban] \"%L\" (%s/%s) banned \"%L\" (%s/%s) (minutes \"%d\") (reason \"%s\")", admin, g_szCSteamID2, g_szCIP, client, g_szTSteamID2, g_szTIP, time, Reason);
+	}
+
 	if(PlayerDataPack[admin] != INVALID_HANDLE)
 	{
 		CloseHandle(PlayerDataPack[admin]);
@@ -1232,6 +1262,7 @@ public InsertBanIpCallback(Handle:owner, Handle:hndl, const String:error[], any:
 			  minutes,
 			  arg,
 			  reason);
+
 	if(admin && IsClientInGame(admin))
 		PrintToChat(admin, "%s%s successfully banned", Prefix, arg);
 	else

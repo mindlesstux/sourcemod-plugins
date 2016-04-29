@@ -261,7 +261,7 @@ PerformUnMute(client, target, bool:silent=false)
 	// SourceIRC support
 	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
 	{
-		IRC_MsgFlaggedChannels("ircnoteMute", "[SM-Mute] \"%L\" unmuted \"%L\"", client, target);
+		IRC_MsgFlaggedChannels("ircnoteMute", "[SM-Mute] %L unmuted %L", client, target);
 	}
 }
 
@@ -277,7 +277,9 @@ PerformGag(client, target, bool:silent=false)
 	// SourceIRC support
 	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
 	{
-		IRC_MsgFlaggedChannels("ircnoteGag", "[SM-Gag] \"%L\" gagged \"%L\"", client, target);
+		PrintToServer("%s", client);
+		PrintToServer("%s", target);
+		IRC_MsgFlaggedChannels("ircnoteGag", "[SM-Gag] %L gagged %L", client, target);
 	}
 }
 
@@ -293,7 +295,9 @@ PerformUnGag(client, target, bool:silent=false)
 	// SourceIRC support
 	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
 	{
-		IRC_MsgFlaggedChannels("ircnoteGag", "[SM-Gag] \"%L\" gagged \"%L\"", client, target);
+		PrintToServer("%s", client);
+		PrintToServer("%s", target);
+		IRC_MsgFlaggedChannels("ircnoteGag", "[SM-Gag] %L ungagged %L", client, target);
 	}
 }
 
@@ -317,7 +321,7 @@ PerformSilence(client, target)
 	// SourceIRC support
 	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
 	{
-		IRC_MsgFlaggedChannels("ircnoteMute", "[SM-Silence] \"%L\" silenced \"%L\"", client, target);
+		IRC_MsgFlaggedChannels("ircnoteMute", "[SM-Silence] %L silenced %L", client, target);
 	}
 }
 
@@ -352,7 +356,7 @@ PerformUnSilence(client, target)
 	// SourceIRC support
 	if (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
 	{
-		IRC_MsgFlaggedChannels("ircnoteMute", "[SM-Silence] \"%L\" unsilenced \"%L\"", client, target);
+		IRC_MsgFlaggedChannels("ircnoteMute", "[SM-Silence] %L unsilenced %L", client, target);
 	}
 }
 

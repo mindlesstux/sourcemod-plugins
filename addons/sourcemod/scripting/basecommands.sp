@@ -59,6 +59,14 @@ new Handle:g_ProtectedVars;
 #include "basecommands/map.sp"
 #include "basecommands/execcfg.sp"
 
+public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+{
+	MarkNativeAsOptional("IRC_MsgFlaggedChannels");
+
+	return APLRes_Success;
+}
+
+
 public OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -94,9 +102,6 @@ public OnPluginStart()
 	ProtectVar("rcon_password");
 	ProtectVar("sm_show_activity");
 	ProtectVar("sm_immunity_mode");
-
-	IRC_MsgFlaggedChannels("ircnoteKick", "Notify channels of admin kick");
-	IRC_MsgFlaggedChannels("ircnoteMap", "Notify channels of admin map change");
 }
 
 public OnMapStart()
