@@ -1,26 +1,27 @@
 # sourcemod-plugins
 
 Things in this folder are to allow for the Updater plugin to pull updates as I write them.
+
 https://forums.alliedmods.net/showthread.php?t=169095
 
 
 Structure should be as follows where needed
 
-   /plugin_name/
-   /plugin_name/updatefile.txt
-   /plugin_name/plugins/plugin_name.smx
-   /plugin_name/translations/plugin_name.phrases.txt
-   /plugin_name/translations/[ru,uk,ff,etc.]/plugin_name.phrases.txt
-   /plugin_name/models/characters/batman.mdl
-   /plugin_name/materials/models/characters/batman.vmt
-   /plugin_name/scripting/plugin_name.sp
+    /plugin_name/
+    /plugin_name/updatefile.txt
+    /plugin_name/plugins/plugin_name.smx
+    /plugin_name/translations/plugin_name.phrases.txt
+    /plugin_name/translations/[ru,uk,ff,etc.]/plugin_name.phrases.txt
+    /plugin_name/models/characters/batman.mdl
+    /plugin_name/materials/models/characters/batman.vmt
+    /plugin_name/scripting/plugin_name.sp
 
 
 Contents of the updatefile.txt:
 
-   "Updater"
-   {
-   	"Information"
+    "Updater"
+    {
+    	"Information"
    	{
    		"Version"
    		{
@@ -42,4 +43,4 @@ Contents of the updatefile.txt:
    		
    		"Source"	"Path_SM/scripting/myplugin.sp"
    	}
-   }
+    }
