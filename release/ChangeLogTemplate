@@ -1,0 +1,12 @@
+Changes go downward, months go upward.
+
+Legend:
+--------------------------------------------------------------------------------
+ ! Minor change or bugfix. (don't bother to log typos except between releases.)
+ * Change like above, but affects templates.
+ & Change that affects a language file. (make two if it affects templates too.)
+ + Feature addition or improvement.
+ - Feature or option removal.
+
+PRODUCT			VERSION				1970/01/01 000000+0000
+===============================================================================
