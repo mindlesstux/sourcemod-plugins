@@ -1,0 +1,21 @@
+"Updater"
+{
+	"Information"
+	{
+		"Version"
+		{
+			"Latest"	"0.0.1"
+		}
+		
+		"Notes"	"Find a list of my plugins (and links to their threads) at www.mindlesstux.com/sourcemod-plugins/"
+		"Notes" "Changes:"
+		"Notes" " - Inital relase"
+	}
+	
+	"Files"
+	{	
+		"Plugin"	"Path_SM/plugins/mt_cheatannoy.smx"
+		"Source"	"Path_SM/scripting/mt_cheatannoy.sp"
+		"Source"	"Path_SM/scripting/updater_mindlesstux.sp"
+	}
+}
