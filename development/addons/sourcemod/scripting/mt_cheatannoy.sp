@@ -22,7 +22,7 @@ public Plugin:myinfo = {
   author = "MindlessTux",
   description = "Annoy a cheater (or player)",
   version = PLUGIN_VERSION,
-  url = "https://mindlesstux.com/sourcemod/mt_cheaterannoy/"
+  url = "https://mindlesstux.com/sourcemod-plugins/cheater-annoy-er/"
 };
 
 public OnPluginStart()

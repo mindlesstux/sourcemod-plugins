@@ -39,7 +39,7 @@
 #include <updater>
 #define REQUIRE_PLUGIN
 
-#define UPDATER_BASE_URL "https://mindlesstux.com/sourcemod-plugins/release/"
+#define UPDATER_BASE_URL "https://mindlesstux.com/sourcemod-plugins-release"
 
 new Handle:cvarEnableUpdater;
 new Handle:cvarBranchUpdater;
