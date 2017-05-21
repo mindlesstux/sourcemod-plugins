@@ -47,17 +47,17 @@ new Handle:cvarVersion;
 
 public OnAllPluginsLoaded() {
 	decl String:cvarName[64];
-  Format(cvarName, sizeof(cvarName), "%s_auto_update", CONVAR_PREFIX);
+	Format(cvarName, sizeof(cvarName), "%s_auto_update", CONVAR_PREFIX);
 	cvarEnableUpdater = CreateConVar(cvarName, "1", "Enables automatic updating (has no effect if Updater is not installed)");
 
-  Format(cvarName, sizeof(cvarName), "%s_autoupdate_development", CONVAR_PREFIX);
+	Format(cvarName, sizeof(cvarName), "%s_autoupdate_development", CONVAR_PREFIX);
 	cvarBranchUpdater = CreateConVar(cvarName, "0", "Which branch to check, has no effect if Updater is not installed and autoupdate not set.  0 = stable, 1 = developmnet");
 
-  Format(cvarName, sizeof(cvarName), "%s_version", CONVAR_PREFIX);
+	Format(cvarName, sizeof(cvarName), "%s_version", CONVAR_PREFIX);
 	cvarVersion = CreateConVar(cvarName, PLUGIN_VERSION, "Plugin Version", FCVAR_DONTRECORD|FCVAR_CHEAT|FCVAR_NOTIFY);
 
 	HookConVarChange(cvarEnableUpdater, CheckUpdaterStatus);
-  HookConVarChange(cvarBranchUpdater, CheckUpdaterStatus);
+	HookConVarChange(cvarBranchUpdater, CheckUpdaterStatus);
 	HookConVarChange(cvarVersion, CheckUpdaterStatus);
 	CheckUpdaterStatus(INVALID_HANDLE, "", "");
 
@@ -86,17 +86,17 @@ public CheckUpdaterStatus(Handle:convar, const String:name[], const String:value
 	if(cvarVersion == INVALID_HANDLE) {
 		return; // Version cvar not created yet
 	}
-  if(cvarBranchUpdater == INVALID_HANDLE) {
+	if(cvarBranchUpdater == INVALID_HANDLE) {
 		return; // Branch cvar not created yet
 	}
 
 	if(LibraryExists("updater") && GetConVarBool(cvarEnableUpdater)) {
 		decl String:url[512], String:version[12];
-    if(!GetConVarBool(cvarBranchUpdater)) {
-		  Format(url, sizeof(url), "%s/stable/%s", UPDATER_BASE_URL, UPDATE_FILE);
-    } else {
-      Format(url, sizeof(url), "%s/development/%s", UPDATER_BASE_URL, UPDATE_FILE);
-    }
+		if(!GetConVarBool(cvarBranchUpdater)) {
+			Format(url, sizeof(url), "%s/stable/%s", UPDATER_BASE_URL, UPDATE_FILE);
+		} else {
+			Format(url, sizeof(url), "%s/development/%s", UPDATER_BASE_URL, UPDATE_FILE);
+		}
 		Updater_AddPlugin(url); // Has no effect if we're already in Updater's pool
 
 		Format(version, sizeof(version), "%sA", PLUGIN_VERSION);
