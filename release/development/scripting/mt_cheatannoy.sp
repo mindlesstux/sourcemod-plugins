@@ -6,9 +6,9 @@
 #include <sdktools>
 #include <tf2>
 #include <tf2_stocks>
-#define PLUGIN_VERSION "0.0.2"
+#define PLUGIN_VERSION "0.1.0"
 #define UPDATE_FILE	"mt_cheatannoy.updater.txt"
-#define CONVAR_PREFIX	"mt_cheatannoy"
+#define CONVAR_PREFIX	"mt_cheaterannoy"
 
 #undef REQUIRE_PLUGIN
 
@@ -37,14 +37,14 @@ public OnPluginStart()
 
 public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-  int userid = event.GetInt("userid");
+	int userid = event.GetInt("userid");
   int target = GetClientOfUserId(userid);
   PerformCheatAnnoyanceToggle(target);
 }
 
 public void Event_InventoryUpdate(Event event, const char[] name, bool dontBroadcast)
 {
-  int userid = event.GetInt("userid");
+	int userid = event.GetInt("userid");
   int target = GetClientOfUserId(userid);
   PerformCheatAnnoyanceToggle(target);
 }
@@ -92,7 +92,7 @@ public Action MT_CheatAnnoy(int client, int args)
   // If no username supplied, kick back help to client
   if (args < 1)
   {
-    ReplyToCommand(client, "[SM] Usage: smmt_cheatannoy <#userid|name>");
+    ReplyToCommand(client, "[SM] Usage: sm_cheaterannoy <#userid|name>");
     return Plugin_Handled;
   }
 
@@ -130,3 +130,4 @@ public Action MT_CheatAnnoy(int client, int args)
   }
   return Plugin_Handled;
 }
+
