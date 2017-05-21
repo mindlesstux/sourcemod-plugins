@@ -9,7 +9,7 @@
 		
 		"Notes"	"Find a list of my plugins (and links to their threads) at www.mindlesstux.com/sourcemod-plugins/"
 		"Notes" "Changes:"
-		"Notes" " - Inital relase"
+		"Notes" "0.0.1 - Inital relase"
 	}
 	
 	"Files"
