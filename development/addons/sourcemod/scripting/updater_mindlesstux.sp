@@ -36,6 +36,7 @@
 #if defined REQUIRE_PLUGIN
  #undef REQUIRE_PLUGIN
 #endif
+#include <logging>
 #include <updater>
 #define REQUIRE_PLUGIN
 
@@ -97,6 +98,7 @@ public CheckUpdaterStatus(Handle:convar, const String:name[], const String:value
 		} else {
 			Format(url, sizeof(url), "%s/development/%s", UPDATER_BASE_URL, UPDATE_FILE);
 		}
+		LogMessage("Registering URL: %s", url);
 		Updater_AddPlugin(url); // Has no effect if we're already in Updater's pool
 
 		Format(version, sizeof(version), "%sA", PLUGIN_VERSION);

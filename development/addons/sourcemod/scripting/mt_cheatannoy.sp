@@ -2,6 +2,7 @@
 
 #include <basecomm>
 #include <clientprefs>
+#include <logging>
 #include <sourcemod>
 #include <sdktools>
 #include <tf2>
@@ -32,6 +33,8 @@ public OnPluginStart()
 
   HookEvent("post_inventory_application", Event_InventoryUpdate);
   HookEvent("player_spawn", Event_PlayerSpawn);
+
+  LogMessage("Plugin Version: %s", PLUGIN_VERSION);
 }
 
 
