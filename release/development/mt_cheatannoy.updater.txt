@@ -4,11 +4,12 @@
 	{
 		"Version"
 		{
-			"Latest"	"0.1.1"
+			"Latest"	"0.1.2"
 		}
 		
 		"Notes"	"Find a list of my plugins (and links to their threads) at www.mindlesstux.com/sourcemod-plugins/"
 		"Notes" "Changes:"
+		"Notes" "0.1.2 - Does Updater not like HTTPS?"
 		"Notes" "0.1.1 - Version bump to test updater and src code white spaces."
 		"Notes" "0.1.0 - Small text changes"
 		"Notes" "0.0.2 - Fixed TF2 Resupply giving weapons & spawn resetting glow"
