@@ -86,6 +86,7 @@ jobs:
           rm sourcemod/addons/sourcemod/scripting/listenexample.sp
           rm sourcemod/addons/sourcemod/scripting/selftest.sp
           cp -rv extra-things/steamtools/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
+          sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
           cp -rv extra-things/steamworks/SteamWorks/Pawn/* sourcemod/addons/sourcemod/scripting/
           rm sourcemod/addons/sourcemod/scripting/UpdateCheck.sp
           cp -rv mtg_src/src-tarballs/SteamWorks.inc sourcemod/addons/sourcemod/scripting/include/
