@@ -16,27 +16,19 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    name: Setup environment and pull source
+    name: Build my plugins
     runs-on: ubuntu-latest
     steps:
       - name: Import various bits of source 
         run: |
           git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
-          pwd
           mkdir sourcemod
-          pwd
           mv mtg_src/sourcemod*.tar.gz ./sourcemod
-          pwd
           cd ./sourcemod
-          pwd
           tar -zxf sourcemod*.tar.gz
-          pwd
           rm addons/sourcemod/scripting/compile.sh
-          pwd
-          cp -v ../mtg-sourcemod-compile.sh addons/sourcemod/scripting/compile.sh
-          pwd
+          cp -v ../mtg_src/mtg-sourcemod-compile.sh addons/sourcemod/scripting/compile.sh
           chmod +x addons/sourcemod/scripting/compile.sh
-          pwd
       - name: What do we have?
         run: |
           pwd
