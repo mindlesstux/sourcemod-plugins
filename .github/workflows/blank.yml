@@ -23,7 +23,7 @@ jobs:
         run: |
           git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
           mkdir sourcemod
-          mv mtg_src/sourcemod*.tar.gz ./sourcemod
+          mv mtg_src/src-tarballs/sourcemod*.tar.gz ./sourcemod
           cd ./sourcemod
           tar -zxf sourcemod*.tar.gz
           rm addons/sourcemod/scripting/compile.sh
