@@ -39,10 +39,10 @@ jobs:
       - name: What do we have?
         run: |
           ls -al sourcemod/addons/sourcemod/scripting/compiled
-  
-
-    # Check out the 1.10-dev sourcemod to compile from
-    #- name: Checkout sourcemod 1.10-dev
-    #  uses: actions/checkout@1.10-dev
-    #  with:
-    #    repository: alliedmodders/sourcemod #
+      - name: Copy my plugins in for compiling
+        run: |
+          cp -rv code/TF2_Cheater_Annoyer/* sourcemod/addons/sourcemod/
+      - name: Build the base+my sourcemod plugins
+        run: |
+          cd sourcemod/addons/sourcemod/scripting
+          bash ./compile.sh
