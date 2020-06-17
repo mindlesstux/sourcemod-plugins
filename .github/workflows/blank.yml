@@ -9,18 +9,34 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+# TODO: At somepoint master should be release/*    
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
+    name: Build plugins
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    
+    # Check out the 1.10-dev sourcemod to compile from
+    - name: Checkout sourcemod 1.10-dev
+      uses: actions/checkout@1.10-dev
+      with:
+        repository: alliedmodders/sourcemod #
+
+    - name: What do we have part 1
+      run: ls -al
+
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
+
+    - name: What do we have part 2
+      run: ls -al
+
 
     # Runs a single command using the runners shell
     - name: Run a one-line script
