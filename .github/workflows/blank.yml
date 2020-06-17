@@ -77,7 +77,7 @@ jobs:
       - name: What do we have?
         run: |
           ls -al sourcemod/addons/sourcemod/scripting/compiled
-      - name: Copy extra libs in for compiling
+      - name: Copy extra libs & modify files in for compiling
         run: |
           cp -rv extra-things/curl/scripting/* sourcemod/addons/sourcemod/scripting/
           rm sourcemod/addons/sourcemod/scripting/curl_self_test.sp
@@ -86,6 +86,7 @@ jobs:
           rm sourcemod/addons/sourcemod/scripting/example.sp
           rm sourcemod/addons/sourcemod/scripting/listenexample.sp
           rm sourcemod/addons/sourcemod/scripting/selftest.sp
+          sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/socket.inc
           cp -rv extra-things/steamtools/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
           sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
           rm sourcemod/addons/sourcemod/scripting/steamtools.sp
