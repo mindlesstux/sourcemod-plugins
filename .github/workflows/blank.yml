@@ -22,7 +22,8 @@ jobs:
       - name: Import various bits of source 
         run: |
           git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
-          git clone https://github.com/alliedmodders/sourcemod.git sourcemod
+          mkdir sourcemod
+          mv mtg_src/sourcemod*.tar.gz ./sourcemod
       - name: What do we have?
         run: |
           pwd
