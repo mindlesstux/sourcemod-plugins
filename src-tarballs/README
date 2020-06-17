@@ -1,6 +1,16 @@
 sourcemod-1.10.0-git6488-linux.tar.gz comes from:
 	https://sm.alliedmods.net/smdrop/1.10/sourcemod-1.10.0-git6488-linux.tar.gz
 	https://www.sourcemod.net/downloads.php?branch=stable
+
+curl_1.3.0.0_linux.zip comes from:
+	https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/sourcemod-curl-extension/curl_1.3.0.0_linux.zip
+	https://code.google.com/archive/p/sourcemod-curl-extension/downloads
+	https://forums.alliedmods.net/showthread.php?t=152216
+
+socket_3.0.1.zip comes from:
+	http://forums.alliedmods.net/attachment.php?attachmentid=83286
+	https://forums.alliedmods.net/showthread.php?t=67640
+
 Updater-v1.2.2.tar.gz comes from:
 	https://bitbucket.org/GoD_Tony/updater/get/v1.2.2.tar.gz
 	https://forums.alliedmods.net/showthread.php?t=169095?t=169095
