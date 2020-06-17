@@ -19,13 +19,28 @@ jobs:
     name: Setup environment and pull source
     runs-on: ubuntu-latest
     steps:
-      - run: mkdir mtg_src
-      - run: cd mtg_src
-      - uses: actions/checkout@v1
-      - run: echo "SRC Pulled"
-      - run: ls -al
-      - run: pwd
-
+      - name: Prep for my source 
+        run: |
+          pwd
+          cd ~
+          pwd
+          mkdir mtg_src
+          cd mtg_src
+      - name: Checkout my code
+        uses: actions/checkout@v1
+      - name: Prep for sourcemod source
+        run: |
+          pwd
+          cd ~
+          pwd
+          git clone https://github.com/alliedmodders/sourcemod.git sourcemod
+          cd ~
+      - name: What do we have?
+        run: |
+          pwd
+          ls -al
+          ls -al mtg_src
+          ls -al sourcemod
 
     # Check out the 1.10-dev sourcemod to compile from
     #- name: Checkout sourcemod 1.10-dev
