@@ -45,22 +45,22 @@ jobs:
           find
       - name: Explode things  SteamTools
         run: |
-          mv mtg_src/src-tarballs/steamtools*.zip ./extra-things/steamtools.zip
+          mv mtg_src/src-tarballs/steamtools*.zip ./extra-things/steamtools/steamtools.zip
           cd extra-things/steamtools
           unzip steamtools.zip
           find
       - name: Explode things  SteamWorks
         run: |
-          mv mtg_src/src-tarballs/steamworks*.tar.gz ./steamworks/steamworks.tar.gz
+          mv mtg_src/src-tarballs/steamworks*.tar.gz ./extra-things/steamworks/steamworks.tar.gz
           cd extra-things/steamworks
           tar -zxvf steamworks.tar.gz
           mv SteamWorks* SteamWorks
           find
       - name: Explode things  Updater
         run: |
-          mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater
+          mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater/Updater.tar.gz
           cd extra-things/updater
-          tar zxf Updater*.tar.gz
+          tar zxf Updater.tar.gz
           mv GoD_Tony-updater-* Updater
           find
       - name: What do we have?
