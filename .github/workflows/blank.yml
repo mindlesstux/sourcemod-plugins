@@ -34,6 +34,7 @@ jobs:
           mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater
           cd extra-things/updater
           tar zxf Updater*.tar.gz
+          mv GoD_Tony-updater-* Updater
       - name: What do we have?
         run: |
           pwd
@@ -49,7 +50,7 @@ jobs:
           ls -al sourcemod/addons/sourcemod/scripting/compiled
       - name: Copy extra libs in for compiling
         run: |
-          cp -rv extra-things/updater/GoD_Tony_updater*/* sourcemod/addons/sourcemod/scripting/
+          cp -rv extra-things/updater/Updater/* sourcemod/addons/sourcemod/scripting/
       - name: Build the base+extra libs sourcemod plugins
         run: |
           cd sourcemod/addons/sourcemod/scripting
