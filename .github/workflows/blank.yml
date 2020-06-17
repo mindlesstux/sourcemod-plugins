@@ -19,9 +19,12 @@ jobs:
     name: Setup environment and pull source
     runs-on: ubuntu-latest
     steps:
+      - run: mkdir mtg_src
+      - run: cd mtg_src
       - uses: actions/checkout@v1
       - run: echo "SRC Pulled"
       - run: ls -al
+      - run: pwd
 
 
     # Check out the 1.10-dev sourcemod to compile from
@@ -40,6 +43,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
+      - run: ls -al
       
   store:
     name: Pull out the artifacts we care about
@@ -48,3 +52,4 @@ jobs:
     steps:
       - name: Run another one-line script
         run: echo Nope to the world!
+      - run: ls -al
