@@ -1,0 +1,3 @@
+The reason for a tarball in the repo is so that I can use github actions to work with the same source all the time.  The binary blob is sourced from:
+http://www.sourcemod.net/downloads.php?branch=stable#
+
