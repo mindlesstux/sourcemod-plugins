@@ -89,6 +89,7 @@ jobs:
           sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
           rm sourcemod/addons/sourcemod/scripting/steamtools.sp
           cp -rv extra-things/steamworks/SteamWorks/Pawn/* sourcemod/addons/sourcemod/scripting/
+          mv sourcemod/addons/sourcemod/scripting/swag.sp sourcemod/addons/sourcemod/scripting/swag.sp.disabled
           rm sourcemod/addons/sourcemod/scripting/UpdateCheck.sp
           cp -rv mtg_src/src-tarballs/SteamWorks.inc sourcemod/addons/sourcemod/scripting/include/
           ls -al sourcemod/addons/sourcemod/scripting/
