@@ -29,6 +29,11 @@ jobs:
           rm addons/sourcemod/scripting/compile.sh
           cp -v ../mtg_src/mtg-sourcemod-compile.sh addons/sourcemod/scripting/compile.sh
           chmod +x addons/sourcemod/scripting/compile.sh
+          cd ..
+          mkdir extra-things/updater
+          mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater
+          cd extra-things/updater
+          tar zxf Updater*.tar.gz
       - name: What do we have?
         run: |
           pwd
@@ -42,12 +47,19 @@ jobs:
       - name: What do we have?
         run: |
           ls -al sourcemod/addons/sourcemod/scripting/compiled
+      - name: Copy extra libs in for compiling
+        run: |
+          cp -rv extra-things/updater/GoD_Tony_updater*/* sourcemod/addons/sourcemod/scripting/
+      - name: Build the base+extra libs sourcemod plugins
+        run: |
+          cd sourcemod/addons/sourcemod/scripting
+          bash ./compile.sh
       - name: Copy my plugins in for compiling
         run: |
           cp -rv mtg_src/code/TF2_Cheater_Annoyer/* sourcemod/addons/sourcemod/
           cp -v mtg_src/code/reference/updater.sp sourcemod/addons/sourcemod/scripting/
           cp -v mtg_src/code/reference/updater_mindlesstux.sp sourcemod/addons/sourcemod/scripting/updater_mindlesstux.spinc
-      - name: Build the base+my sourcemod plugins
+      - name: Build the base+extra libs+my sourcemod plugins
         run: |
           cd sourcemod/addons/sourcemod/scripting
           bash ./compile.sh
