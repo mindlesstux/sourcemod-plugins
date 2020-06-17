@@ -30,7 +30,7 @@ jobs:
           cp -v ../mtg_src/mtg-sourcemod-compile.sh addons/sourcemod/scripting/compile.sh
           chmod +x addons/sourcemod/scripting/compile.sh
           cd ..
-          mkdir extra-things/updater
+          mkdir -p extra-things/updater
           mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater
           cd extra-things/updater
           tar zxf Updater*.tar.gz
