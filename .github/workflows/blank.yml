@@ -31,31 +31,33 @@ jobs:
           chmod +x addons/sourcemod/scripting/compile.sh
           cd ..
           mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
-       - name: Explode things - Curl
-         run: |
+      - name: Explode things  Curl
+        run: |
            mv mtg_src/src-tarballs/curl*.zip ./extra-things/curl/curl.zip
            cd extra-things/curl
            unzip curl.zip
            find
-       - name: Explode things - Socket
-         run: |
+      - name: Explode things  Socket
+        run: |
           mv mtg_src/src-tarballs/socket*.zip ./extra-things/socket/socket.zip
           cd extra-things/socket
           unzip socket.zip
           find
-       - name: Explode things - SteamTools
-         run: |
+      - name: Explode things  SteamTools
+        run: |
           mv mtg_src/src-tarballs/steamtools*.zip ./extra-things/steamtools.zip
           cd extra-things/steamtools
           unzip steamtools.zip
           find
-       - name: Explode things - SteamWorks
+      - name: Explode things  SteamWorks
+        run: |
           mv mtg_src/src-tarballs/steamworks*.tar.gz ./steamworks/steamworks.tar.gz
           cd extra-things/steamworks
           tar -zxvf steamworks.tar.gz
           mv SteamWorks* SteamWorks
           find
-       - name: Explode things - Updater
+      - name: Explode things  Updater
+        run: |
           mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater
           cd extra-things/updater
           tar zxf Updater*.tar.gz
