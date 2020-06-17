@@ -22,8 +22,9 @@ jobs:
       - name: Prep for my source 
         run: |
           pwd
-          cd ~
+          cd /home/runner/work/sourcemod-plugins/sourcemod-plugins
           pwd
+          ls -al
           mkdir mtg_src
           cd mtg_src
       - name: Checkout my code
@@ -31,10 +32,12 @@ jobs:
       - name: Prep for sourcemod source
         run: |
           pwd
-          cd ~
+          cd /home/runner/work/sourcemod-plugins/sourcemod-plugins
           pwd
+          ls -al
           git clone https://github.com/alliedmodders/sourcemod.git sourcemod
-          cd ~
+          cd /home/runner/work/sourcemod-plugins/sourcemod-plugins
+          ls -al
       - name: What do we have?
         run: |
           pwd
