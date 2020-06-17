@@ -41,7 +41,7 @@ jobs:
           ls -al sourcemod/addons/sourcemod/scripting/compiled
       - name: Copy my plugins in for compiling
         run: |
-          cp -rv code/TF2_Cheater_Annoyer/* sourcemod/addons/sourcemod/
+          cp -rv mtg_src/code/TF2_Cheater_Annoyer/* sourcemod/addons/sourcemod/
       - name: Build the base+my sourcemod plugins
         run: |
           cd sourcemod/addons/sourcemod/scripting
