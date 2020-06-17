@@ -38,7 +38,7 @@ jobs:
           bash ./compile.sh
       - name: What do we have?
         run: |
-          ls -al sourcemod/plugins/compiled
+          ls -al sourcemod/addons/sourcemod/scripting/compiled
   
 
     # Check out the 1.10-dev sourcemod to compile from
