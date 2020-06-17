@@ -79,8 +79,14 @@ jobs:
           ls -al sourcemod/addons/sourcemod/scripting/compiled
       - name: Copy extra libs in for compiling
         run: |
-          cp -rv extra-things/updater/Updater/* sourcemod/addons/sourcemod/scripting/
-      - name: Build the base+extra libs+depenancy plugins sourcemod plugins
+          cp -rv extra-things/curl/scripting/* sourcemod/addons/sourcemod/scripting/
+          cp -rv extra-things/socket/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
+          rm sourcemod/addons/sourcemod/scripting/example.sp
+          cp -rv extra-things/steamtools/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
+          cp -rv extra-things/steamworks/SteamWorks/Pawn/* sourcemod/addons/sourcemod/scripting/
+          ls -al sourcemod/addons/sourcemod/scripting/
+          ls -al sourcemod/addons/sourcemod/scripting/include/
+      - name: Build the base+extra libs sourcemod plugins
         run: |
           cd sourcemod/addons/sourcemod/scripting
           bash ./compile.sh
