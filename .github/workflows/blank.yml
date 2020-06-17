@@ -26,6 +26,9 @@ jobs:
           mv mtg_src/sourcemod*.tar.gz ./sourcemod
           cd ./sourcemod
           tar -zxf sourcemod*.tar.gz
+          rm addons/sourcemod/scripting/compile.sh
+          cp -v ../mtg-sourcemod-compile.sh addons/sourcemod/scripting/compile.sh
+          chmod +x addons/sourcemod/scripting/compile.sh
       - name: What do we have?
         run: |
           pwd
