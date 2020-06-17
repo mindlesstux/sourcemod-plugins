@@ -14,7 +14,7 @@
 #undef REQUIRE_PLUGIN
 
 // Load the auto updater add that Doctor McKay made
-#include "updater_mindlesstux.sp"
+#include "updater_mindlesstux.spinc"
 
 new Handle:cookieCheater;
 
