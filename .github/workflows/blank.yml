@@ -22,13 +22,21 @@ jobs:
       - name: Import various bits of source 
         run: |
           git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
+          pwd
           mkdir sourcemod
+          pwd
           mv mtg_src/sourcemod*.tar.gz ./sourcemod
+          pwd
           cd ./sourcemod
+          pwd
           tar -zxf sourcemod*.tar.gz
+          pwd
           rm addons/sourcemod/scripting/compile.sh
+          pwd
           cp -v ../mtg-sourcemod-compile.sh addons/sourcemod/scripting/compile.sh
+          pwd
           chmod +x addons/sourcemod/scripting/compile.sh
+          pwd
       - name: What do we have?
         run: |
           pwd
