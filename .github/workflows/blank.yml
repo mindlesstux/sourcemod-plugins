@@ -7,8 +7,10 @@ name: CI
 on:
   push:
     branches: [ master ]
+    tags: [ release/* ]
   pull_request:
     branches: [ master ]
+    tags: [ release/* ]
 # TODO: At somepoint master should be release/*    
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -23,10 +25,10 @@ jobs:
     steps:
     
     # Check out the 1.10-dev sourcemod to compile from
-    - name: Checkout sourcemod 1.10-dev
-      uses: actions/checkout@1.10-dev
-      with:
-        repository: alliedmodders/sourcemod #
+    #- name: Checkout sourcemod 1.10-dev
+    #  uses: actions/checkout@1.10-dev
+    #  with:
+    #    repository: alliedmodders/sourcemod #
 
     - name: What do we have part 1
       run: ls -al
