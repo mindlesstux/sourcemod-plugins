@@ -30,17 +30,44 @@ jobs:
           cp -v ../mtg_src/mtg-sourcemod-compile.sh addons/sourcemod/scripting/compile.sh
           chmod +x addons/sourcemod/scripting/compile.sh
           cd ..
-          mkdir -p extra-things/updater
+          mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
+       - name: Explode things - Curl
+         run: |
+           mv mtg_src/src-tarballs/curl*.zip ./extra-things/curl/curl.zip
+           cd extra-things/curl
+           unzip curl.zip
+           find
+       - name: Explode things - Socket
+         run: |
+          mv mtg_src/src-tarballs/socket*.zip ./extra-things/socket/socket.zip
+          cd extra-things/socket
+          unzip socket.zip
+          find
+       - name: Explode things - SteamTools
+         run: |
+          mv mtg_src/src-tarballs/steamtools*.zip ./extra-things/steamtools.zip
+          cd extra-things/steamtools
+          unzip steamtools.zip
+          find
+       - name: Explode things - SteamWorks
+          mv mtg_src/src-tarballs/steamworks*.tar.gz ./steamworks/steamworks.tar.gz
+          cd extra-things/steamworks
+          tar -zxvf steamworks.tar.gz
+          mv SteamWorks* SteamWorks
+          find
+       - name: Explode things - Updater
           mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater
           cd extra-things/updater
           tar zxf Updater*.tar.gz
           mv GoD_Tony-updater-* Updater
+          find
       - name: What do we have?
         run: |
           pwd
           ls -al
           ls -al mtg_src
           ls -al sourcemod
+          ls -al extra-things
       - name: Build the base sourcemod plugins
         run: |
           cd sourcemod/addons/sourcemod/scripting
@@ -51,7 +78,14 @@ jobs:
       - name: Copy extra libs in for compiling
         run: |
           cp -rv extra-things/updater/Updater/* sourcemod/addons/sourcemod/scripting/
-      - name: Build the base+extra libs sourcemod plugins
+      - name: Build the base+extra libs+depenancy plugins sourcemod plugins
+        run: |
+          cd sourcemod/addons/sourcemod/scripting
+          bash ./compile.sh
+      - name: Copy depenancy plugins in for compiling
+        run: |
+          cp -rv extra-things/updater/Updater/* sourcemod/addons/sourcemod/scripting/
+      - name: Build the base+extra libs+depenancy plugins sourcemod plugins
         run: |
           cd sourcemod/addons/sourcemod/scripting
           bash ./compile.sh
@@ -60,7 +94,7 @@ jobs:
           cp -rv mtg_src/code/TF2_Cheater_Annoyer/* sourcemod/addons/sourcemod/
           cp -v mtg_src/code/reference/updater.sp sourcemod/addons/sourcemod/scripting/
           cp -v mtg_src/code/reference/updater_mindlesstux.sp sourcemod/addons/sourcemod/scripting/updater_mindlesstux.spinc
-      - name: Build the base+extra libs+my sourcemod plugins
+      - name: Build the base+extra libs+depenancy plugins+my sourcemod plugins
         run: |
           cd sourcemod/addons/sourcemod/scripting
           bash ./compile.sh
