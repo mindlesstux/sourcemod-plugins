@@ -11,6 +11,16 @@ socket_3.0.1.zip comes from:
 	http://forums.alliedmods.net/attachment.php?attachmentid=83286
 	https://forums.alliedmods.net/showthread.php?t=67640
 
+steamtools-0.10.0-git179-54fdc51-linux.zip comes from:
+	https://builds.limetech.io/files/steamtools-0.10.0-git179-54fdc51-linux.zip
+	https://forums.alliedmods.net/showthread.php?t=236206
+	(Looks like the builds site is broken)
+
+steamworks_1.2.3b.tar.gz comes from
+	https://github.com/KyleSanderson/SteamWorks/archive/1.2.3b.tar.gz
+	https://github.com/KyleSanderson/SteamWorks/releases
+	to go with this needed: https://github.com/KyleSanderson/SteamWorks/blob/master/Pawn/includes/SteamWorks.inc
+
 Updater-v1.2.2.tar.gz comes from:
 	https://bitbucket.org/GoD_Tony/updater/get/v1.2.2.tar.gz
 	https://forums.alliedmods.net/showthread.php?t=169095?t=169095
