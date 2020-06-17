@@ -34,7 +34,7 @@ jobs:
           ls -al sourcemod
       - name: Build the base sourcemod plugins
         run: |
-          cd sourcemod/plugins
+          cd sourcemod/addons/sourcemod/plugins
           bash ./compile.sh
       - name: What do we have?
         run: |
