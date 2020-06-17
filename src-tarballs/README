@@ -7,7 +7,8 @@ curl_1.3.0.0_linux.zip comes from:
 	https://code.google.com/archive/p/sourcemod-curl-extension/downloads
 	https://forums.alliedmods.net/showthread.php?t=152216
 	https://forums.alliedmods.net/showpost.php?p=2672063&postcount=247
-	
+		https://github.com/JoinedSenses/SourceMod-IncludeLibrary/blob/master/include/cURL.inc
+		https://github.com/JoinedSenses/SourceMod-IncludeLibrary/blob/master/include/cURL_header.inc	
 
 socket_3.0.1.zip comes from:
 	http://forums.alliedmods.net/attachment.php?attachmentid=83286

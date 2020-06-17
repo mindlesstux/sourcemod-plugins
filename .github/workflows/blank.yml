@@ -81,7 +81,9 @@ jobs:
         run: |
           cp -rv extra-things/curl/scripting/* sourcemod/addons/sourcemod/scripting/
           rm sourcemod/addons/sourcemod/scripting/curl_self_test.sp
-          sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/cURL.inc
+          #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/cURL.inc
+          cp -rv mtg_src/src-tarballs/cURL.inc sourcemod/addons/sourcemod/scripting/include/cURL.inc
+          cp -rv mtg_src/src-tarballs/cURL_header.inc sourcemod/addons/sourcemod/scripting/include/cURL_header.inc
           cp -rv extra-things/socket/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
           rm sourcemod/addons/sourcemod/scripting/example.sp
           rm sourcemod/addons/sourcemod/scripting/listenexample.sp
