@@ -19,25 +19,10 @@ jobs:
     name: Setup environment and pull source
     runs-on: ubuntu-latest
     steps:
-      - name: Prep for my source 
+      - name: Import various bits of source 
         run: |
-          pwd
-          cd /home/runner/work/sourcemod-plugins/sourcemod-plugins
-          pwd
-          ls -al
-          mkdir mtg_src
-          cd mtg_src
-      - name: Checkout my code
-        uses: actions/checkout@v1
-      - name: Prep for sourcemod source
-        run: |
-          pwd
-          cd /home/runner/work/sourcemod-plugins/sourcemod-plugins
-          pwd
-          ls -al
+          git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
           git clone https://github.com/alliedmodders/sourcemod.git sourcemod
-          cd /home/runner/work/sourcemod-plugins/sourcemod-plugins
-          ls -al
       - name: What do we have?
         run: |
           pwd
