@@ -40,11 +40,10 @@ jobs:
       - name: Explode things  Socket
         run: |
           #mv mtg_src/src-tarballs/socket*.zip ./extra-things/socket/socket.zip
-          cd extra-things/socket
           #unzip socket.zip
           mkdir -p ./extra-things/socket/scripting/include
           cp mtg_src/src-tarballs/socket.inc ./extra-things/socket/scripting/include
-          find
+          find extra-things/socket
       - name: Explode things  SteamTools
         run: |
           mv mtg_src/src-tarballs/steamtools*.zip ./extra-things/steamtools/steamtools.zip
