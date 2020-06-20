@@ -10,9 +10,13 @@ curl_1.3.0.0_linux.zip comes from:
 		https://github.com/JoinedSenses/SourceMod-IncludeLibrary/blob/master/include/cURL.inc
 		https://github.com/JoinedSenses/SourceMod-IncludeLibrary/blob/master/include/cURL_header.inc	
 
-socket_3.0.1.zip comes from:
+socket_3.0.1.zip.nouse comes from:
 	http://forums.alliedmods.net/attachment.php?attachmentid=83286
 	https://forums.alliedmods.net/showthread.php?t=67640
+
+socket.ext.zip comes from:
+	https://forums.alliedmods.net/showthread.php?t=67640&page=56
+	https://raw.githubusercontent.com/JoinedSenses/sm-ext-socket/master/scripting/include/socket.inc
 
 steamtools-0.10.0-git179-54fdc51-linux.zip comes from:
 	https://builds.limetech.io/files/steamtools-0.10.0-git179-54fdc51-linux.zip
