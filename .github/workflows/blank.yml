@@ -87,9 +87,9 @@ jobs:
           cp -rv mtg_src/src-tarballs/cURL_header.inc sourcemod/addons/sourcemod/scripting/include/cURL_header.inc
           #cp -rv extra-things/socket/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
           cp -rv extra-things/socket/scripting/* sourcemod/addons/sourcemod/scripting/
-          rm sourcemod/addons/sourcemod/scripting/example.sp
-          rm sourcemod/addons/sourcemod/scripting/listenexample.sp
-          rm sourcemod/addons/sourcemod/scripting/selftest.sp
+          #rm sourcemod/addons/sourcemod/scripting/example.sp
+          #rm sourcemod/addons/sourcemod/scripting/listenexample.sp
+          #rm sourcemod/addons/sourcemod/scripting/selftest.sp
           #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/socket.inc
           cp -rv extra-things/steamtools/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
           sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
