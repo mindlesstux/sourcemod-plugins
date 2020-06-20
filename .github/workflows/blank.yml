@@ -93,7 +93,7 @@ jobs:
           #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/socket.inc
           cp -rv extra-things/steamtools/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
           sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
-          rm sourcemod/addons/sourcemod/scripting/steamtools.sp
+          #rm sourcemod/addons/sourcemod/scripting/steamtools.sp
           cp -rv extra-things/steamworks/SteamWorks/Pawn/* sourcemod/addons/sourcemod/scripting/
           mv sourcemod/addons/sourcemod/scripting/swag.sp sourcemod/addons/sourcemod/scripting/swag.sp.disabled
           rm sourcemod/addons/sourcemod/scripting/UpdateCheck.sp
