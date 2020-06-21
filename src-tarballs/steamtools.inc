@@ -269,9 +269,9 @@ enum HTTPStatusCode
 
 typeset HTTPRequestComplete
 {
-	function Action (HTTPRequestHandle HTTPRequest, bool requestSuccessful, HTTPStatusCode statusCode),
-	function Action (HTTPRequestHandle HTTPRequest, bool requestSuccessful, HTTPStatusCode statusCode, any contextData),
-};
+	function Action (HTTPRequestHandle HTTPRequest, bool requestSuccessful, HTTPStatusCode statusCode);
+	function Action (HTTPRequestHandle HTTPRequest, bool requestSuccessful, HTTPStatusCode statusCode, any contextData);
+}
 
 native HTTPRequestHandle:Steam_CreateHTTPRequest(HTTPMethod:HTTPRequestMethod, const String:absoluteURL[]);
 native Steam_SetHTTPRequestNetworkActivityTimeout(HTTPRequestHandle:HTTPRequest, timeoutSeconds);
