@@ -46,12 +46,17 @@ jobs:
           find extra-things/socket
       - name: Explode things  SteamTools
         run: |
+          pwd
           mv mtg_src/src-tarballs/steamtools*.zip ./extra-things/steamtools/steamtools.zip
           cd extra-things/steamtools
+          pwd
           unzip steamtools.zip
           cd ../..
+          pwd
+          rm ./extra-things/steamtools/scripting/include/steamtools.inc
           cp mtg_src/src-tarballs/steamtools.inc ./extra-things/steamtools/scripting/include/steamtools.inc
           cd extra-things/steamtools
+          pwd
           find
       - name: Explode things  SteamWorks
         run: |
