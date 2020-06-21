@@ -49,6 +49,9 @@ jobs:
           mv mtg_src/src-tarballs/steamtools*.zip ./extra-things/steamtools/steamtools.zip
           cd extra-things/steamtools
           unzip steamtools.zip
+          cd ../..
+          cp mtg_src/src-tarballs/steamtools.inc ./extra-things/steamtools/scripting/include/steamtools.inc
+          cd extra-things/steamtools
           find
       - name: Explode things  SteamWorks
         run: |
@@ -92,7 +95,7 @@ jobs:
           #rm sourcemod/addons/sourcemod/scripting/selftest.sp
           #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/socket.inc
           cp -rv extra-things/steamtools/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
-          sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
+          #sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
           #rm sourcemod/addons/sourcemod/scripting/steamtools.sp
           cp -rv extra-things/steamworks/SteamWorks/Pawn/* sourcemod/addons/sourcemod/scripting/
           mv sourcemod/addons/sourcemod/scripting/swag.sp sourcemod/addons/sourcemod/scripting/swag.sp.disabled
