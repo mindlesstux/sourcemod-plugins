@@ -53,8 +53,8 @@ jobs:
           unzip steamtools.zip
           cd ../..
           pwd
-          rm ./extra-things/steamtools/scripting/include/steamtools.inc
-          cp mtg_src/src-tarballs/steamtools.inc ./extra-things/steamtools/scripting/include/steamtools.inc
+          rm ./extra-things/steamtools/addons/sourcemod/scripting/include/steamtools.inc
+          cp mtg_src/src-tarballs/steamtools.inc ./extra-things/steamtools/addons/sourcemod/scripting/include/steamtools.inc
           cd extra-things/steamtools
           pwd
           find
