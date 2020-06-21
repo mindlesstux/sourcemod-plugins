@@ -1,0 +1,14 @@
+This folder contains both code I wrote and reference code of other people that ended up on my hard drive.  I wanted to get them into a source control so I could work on my projects and also not fear a loss of data and these plugins.
+
+Most of the reference things are bits and bobs I found online somewhere so I can not link to where I found them.  (If I do find I will)
+
+My plugins:
+    Any_Data_Push:
+        Concept here is most of a old plugin I saw a few times back in the AMX days for goldsrc/adminmod.  What I want this to do is once a second or so take a snapshot of where all the players, buildings, etc are and details about them like HP/Armor/etc.  Then take that snapshot and push to a webserver.  From there what the webserver does is up to someone else.  I evnvision a means to have a little html canvas that would show a overhead of the map and marker icons where everything is.
+
+    Any_Report_To_Forum:
+        A rewrite of the existing plugin I have seen out there.  The difference would be this sends to a singular php file json post of data.  The php file will determine what it does to get the post to the forum.  The existing plugins I have seen will just insert data directly into the forum and thus the code will get messy to support so many forums out there.
+
+    TF2_Cheater_Annoyer:
+        TF2 only for now, would like to make it available to any at somepoint.  Concept here is that a cheater can join the server and then get tagged as one.  Once tagged any weapon pick gets destroyed from inventory.  They get an outline glow so they can be seen at all times.  They also get mute and gaged for that voice and text spam.  So basically they become a wandering target around the map.
+        

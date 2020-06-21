@@ -39,6 +39,7 @@ jobs:
            find
       - name: Explode things  Socket
         run: |
+          # Aparently socket got replaced by socket.ext
           #mv mtg_src/src-tarballs/socket*.zip ./extra-things/socket/socket.zip
           #unzip socket.zip
           mkdir -p ./extra-things/socket/scripting/include
@@ -89,7 +90,7 @@ jobs:
       - name: Copy extra libs & modify files in for compiling
         run: |
           cp -rv extra-things/curl/scripting/* sourcemod/addons/sourcemod/scripting/
-          rm sourcemod/addons/sourcemod/scripting/curl_self_test.sp
+          #rm sourcemod/addons/sourcemod/scripting/curl_self_test.sp
           #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/cURL.inc
           cp -rv mtg_src/src-tarballs/cURL.inc sourcemod/addons/sourcemod/scripting/include/cURL.inc
           cp -rv mtg_src/src-tarballs/cURL_header.inc sourcemod/addons/sourcemod/scripting/include/cURL_header.inc
@@ -103,8 +104,8 @@ jobs:
           #sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
           #rm sourcemod/addons/sourcemod/scripting/steamtools.sp
           cp -rv extra-things/steamworks/SteamWorks/Pawn/* sourcemod/addons/sourcemod/scripting/
-          mv sourcemod/addons/sourcemod/scripting/swag.sp sourcemod/addons/sourcemod/scripting/swag.sp.disabled
-          rm sourcemod/addons/sourcemod/scripting/UpdateCheck.sp
+          #mv sourcemod/addons/sourcemod/scripting/swag.sp sourcemod/addons/sourcemod/scripting/swag.sp.disabled
+          #rm sourcemod/addons/sourcemod/scripting/UpdateCheck.sp
           cp -rv mtg_src/src-tarballs/SteamWorks.inc sourcemod/addons/sourcemod/scripting/include/
           ls -al sourcemod/addons/sourcemod/scripting/
           ls -al sourcemod/addons/sourcemod/scripting/include/
