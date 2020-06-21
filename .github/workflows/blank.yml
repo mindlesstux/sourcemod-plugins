@@ -106,7 +106,7 @@ jobs:
           cp -rv extra-things/steamworks/SteamWorks/Pawn/* sourcemod/addons/sourcemod/scripting/
           #mv sourcemod/addons/sourcemod/scripting/swag.sp sourcemod/addons/sourcemod/scripting/swag.sp.disabled
           #rm sourcemod/addons/sourcemod/scripting/UpdateCheck.sp
-          cp -rv mtg_src/src-tarballs/SteamWorks.inc sourcemod/addons/sourcemod/scripting/include/
+          #cp -rv mtg_src/src-tarballs/SteamWorks.inc sourcemod/addons/sourcemod/scripting/include/
           ls -al sourcemod/addons/sourcemod/scripting/
           ls -al sourcemod/addons/sourcemod/scripting/include/
       - name: Build the base+extra libs sourcemod plugins
