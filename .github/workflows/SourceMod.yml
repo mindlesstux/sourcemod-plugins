@@ -26,6 +26,7 @@ jobs:
           mv mtg_src/src-tarballs/sourcemod*.tar.gz ./sourcemod
           cd ./sourcemod
           tar -zxf sourcemod*.tar.gz
+          rm -f sourcemod*.tar.gz
           rm addons/sourcemod/scripting/compile.sh
           cp -v ../mtg_src/mtg-sourcemod-compile.sh addons/sourcemod/scripting/compile.sh
           chmod +x addons/sourcemod/scripting/compile.sh
@@ -36,10 +37,10 @@ jobs:
           cd sourcemod/addons/sourcemod/scripting
           bash ./compile.sh
       - name: Upload the base
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
-            name: Base Source Mod
-            path: sourcemod
+            name: Base_Source_Mod
+            path: sourcemod/
   setupexts:
     name: Build or setup extensions
     runs-on: ubuntu-latest
@@ -48,8 +49,8 @@ jobs:
       - name: Download base sourcemod
         uses: actions/download-artifact@v1
         with:
-          name: Upload the base
-      - name: 
+          name: Base_Source_Mod
+      - name: What files do we have where?
         run: |
           find
 
