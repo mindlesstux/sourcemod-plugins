@@ -46,19 +46,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: setupbase
     steps:
-      - name: Import the repo
-        run: |
-          git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
-          mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
-      - name: Download base sourcemod
+      - name: Download base sourcemod artifact
         uses: actions/download-artifact@v1
         with:
           name: Base_Source_Mod
+      - name: Import the repo and rename artifact
+        run: |
+          git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
+          mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
+          mv Base_Source_Mod sourcemod
       - name: Explode things  Curl
         run: |
-           echo "TODO: REMOVE THIS DEBUG"
-           find
-           echo "END TODO"
            mv mtg_src/src-tarballs/curl*.zip ./extra-things/curl/curl.zip
            cd extra-things/curl
            unzip curl.zip
