@@ -126,52 +126,83 @@ jobs:
     runs-on: ubuntu-latest
     needs: setupexts
     steps:
-      - name: Import the repo
-        run: |
-          git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
-          mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
       - name: Download base sourcemod
         uses: actions/download-artifact@v1
         with:
           name: Base_Source_Mod_and_Exts
-      - name: What do we have
+      - name: Import the repo and rename artifact
         run: |
+          git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
+          mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
+          mv Base_Source_Mod sourcemod
+      - name: "Explode things: Updater"
+        run: |
+          mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater/Updater.tar.gz
+          cd extra-things/updater
+          tar zxf Updater.tar.gz
+          mv GoD_Tony-updater-* Updater
           find
-#      - name: Explode things  Updater
-#        run: |
-#          mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater/Updater.tar.gz
-#          cd extra-things/updater
-#          tar zxf Updater.tar.gz
-#          mv GoD_Tony-updater-* Updater
-#          find
-#      - name: What do we have?
-#        run: |
-#          pwd
-#          ls -al
-#          ls -al mtg_src
-#          ls -al sourcemod
-#          ls -al extra-things
-#
-#      - name: What do we have?
-#        run: |
-#          ls -al sourcemod/addons/sourcemod/scripting/compiled
-#      - name: Build the base+extra libs sourcemod plugins
-#        run: |
-#          cd sourcemod/addons/sourcemod/scripting
-#          bash ./compile.sh
-#      - name: Copy depenancy plugins in for compiling
-#        run: |
-#          cp -rv extra-things/updater/Updater/* sourcemod/addons/sourcemod/scripting/
-#      - name: Build the base+extra libs+depenancy plugins sourcemod plugins
-#        run: |
-#          cd sourcemod/addons/sourcemod/scripting
-#          bash ./compile.sh
-#      - name: Copy my plugins in for compiling
-#        run: |
-#          cp -rv mtg_src/code/TF2_Cheater_Annoyer/* sourcemod/addons/sourcemod/
-#          cp -v mtg_src/code/reference/updater.sp sourcemod/addons/sourcemod/scripting/
-#          cp -v mtg_src/code/reference/updater_mindlesstux.sp sourcemod/addons/sourcemod/scripting/updater_mindlesstux.spinc
-#      - name: Build the base+extra libs+depenancy plugins+my sourcemod plugins
-#        run: |
-#          cd sourcemod/addons/sourcemod/scripting
-#          bash ./compile.sh
+      - name: What do we have?
+        run: |
+          pwd
+          ls -al
+          ls -al mtg_src
+          ls -al sourcemod
+          ls -al extra-things
+      - name: Copy depenancy plugins in for compiling
+        run: |
+          cp -rv extra-things/updater/Updater/* sourcemod/addons/sourcemod/scripting/
+      - name: Build the base+extra libs+depenancy sourcemod plugins
+        run: |
+          cd sourcemod/addons/sourcemod/scripting
+          bash ./compile.sh
+      - name: Upload the base and extensions
+        uses: actions/upload-artifact@v2
+        with:
+          name: Base_Source_Mod_and_Exts_and_Deps
+          path: sourcemod/
+  setupmyplugs:
+    name: Build or setup my plugins
+    runs-on: ubuntu-latest
+    needs: setupplugdeps
+    steps:
+      - name: Download base sourcemod
+        uses: actions/download-artifact@v1
+        with:
+          name: Base_Source_Mod_and_Exts_and_Deps
+      - name: Import the repo and rename artifact
+        run: |
+          git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
+          mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
+          mv Base_Source_Mod sourcemod
+      - name: Copy my plugins in for compiling
+        run: |
+          cp -rv mtg_src/code/TF2_Cheater_Annoyer/* sourcemod/addons/sourcemod/
+          cp -v mtg_src/code/reference/updater.sp sourcemod/addons/sourcemod/scripting/
+          cp -v mtg_src/code/reference/updater_mindlesstux.sp sourcemod/addons/sourcemod/scripting/updater_mindlesstux.spinc
+      - name: Build the base+extra libs+depenancy plugins+my sourcemod plugins
+        run: |
+          cd sourcemod/addons/sourcemod/scripting
+          bash ./compile.sh
+      - name: "Upload the base, extensions, plugin dependencies, and my plugins"
+        uses: actions/upload-artifact@v2
+        with:
+          name: Base_Source_Mod_and_Exts_and_Deps_and_My_Plugs
+          path: sourcemod/
+  breakoutplugs:
+    name: Make artifacts for my plugins
+    runs-on: ubuntu-latest
+    needs: setupmyplugs
+    steps:
+      - name: Download base sourcemod
+        uses: actions/download-artifact@v1
+        with:
+          name: Base_Source_Mod_and_Exts_and_Deps_and_My_Plugs
+      - name: Import the repo and rename artifact
+        run: |
+          git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
+          mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
+          mv Base_Source_Mod sourcemod
+      - name: Celebrate
+        run: |
+          echo "Holy cow, it finally made it here!"
