@@ -50,6 +50,9 @@ jobs:
         with:
           name: Upload the base
       - name: 
+        run: |
+          find
+
 #      - name: Explode things  Curl
 #        run: |
 #           mv mtg_src/src-tarballs/curl*.zip ./extra-things/curl/curl.zip
