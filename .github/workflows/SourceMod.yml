@@ -19,7 +19,7 @@ jobs:
     name: Build base SourceMod
     runs-on: ubuntu-latest
     steps:
-      - name: Import various bits of source 
+      - name: Import the repo 
         run: |
           git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
           mkdir sourcemod
@@ -46,49 +46,96 @@ jobs:
     runs-on: ubuntu-latest
     needs: setupbase
     steps:
+      - name: Import the repo
+        run: |
+          git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
+          mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
       - name: Download base sourcemod
         uses: actions/download-artifact@v1
         with:
           name: Base_Source_Mod
-      - name: What files do we have where?
+      - name: Explode things  Curl
+        run: |
+           mv mtg_src/src-tarballs/curl*.zip ./extra-things/curl/curl.zip
+           cd extra-things/curl
+           unzip curl.zip
+           find
+      - name: Explode things  Socket
+        run: |
+          # Aparently socket got replaced by socket.ext
+          #mv mtg_src/src-tarballs/socket*.zip ./extra-things/socket/socket.zip
+          #unzip socket.zip
+          mkdir -p ./extra-things/socket/scripting/include
+          cp mtg_src/src-tarballs/socket.inc ./extra-things/socket/scripting/include
+          find extra-things/socket
+      - name: Explode things  SteamTools
+        run: |
+          pwd
+          mv mtg_src/src-tarballs/steamtools*.zip ./extra-things/steamtools/steamtools.zip
+          cd extra-things/steamtools
+          pwd
+          unzip steamtools.zip
+          cd ../..
+          pwd
+          rm ./extra-things/steamtools/addons/sourcemod/scripting/include/steamtools.inc
+          cp mtg_src/src-tarballs/steamtools.inc ./extra-things/steamtools/addons/sourcemod/scripting/include/steamtools.inc
+          cd extra-things/steamtools
+          pwd
+          find
+      - name: Explode things  SteamWorks
+        run: |
+          mv mtg_src/src-tarballs/steamworks*.tar.gz ./extra-things/steamworks/steamworks.tar.gz
+          cd extra-things/steamworks
+          tar -zxvf steamworks.tar.gz
+          mv SteamWorks* SteamWorks
+          find
+      - name: Setup extensions for compile or use
+        run: |
+          cp -rv extra-things/curl/scripting/* sourcemod/addons/sourcemod/scripting/
+          rm sourcemod/addons/sourcemod/scripting/curl_self_test.sp
+          #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/cURL.inc
+          cp -rv mtg_src/src-tarballs/cURL.inc sourcemod/addons/sourcemod/scripting/include/cURL.inc
+          cp -rv mtg_src/src-tarballs/cURL_header.inc sourcemod/addons/sourcemod/scripting/include/cURL_header.inc
+          #cp -rv extra-things/socket/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
+          cp -rv extra-things/socket/scripting/* sourcemod/addons/sourcemod/scripting/
+          #rm sourcemod/addons/sourcemod/scripting/example.sp
+          #rm sourcemod/addons/sourcemod/scripting/listenexample.sp
+          #rm sourcemod/addons/sourcemod/scripting/selftest.sp
+          #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/socket.inc
+          cp -rv extra-things/steamtools/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
+          #sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
+          #rm sourcemod/addons/sourcemod/scripting/steamtools.sp
+          cp -rv extra-things/steamworks/SteamWorks/Pawn/* sourcemod/addons/sourcemod/scripting/
+          #mv sourcemod/addons/sourcemod/scripting/swag.sp sourcemod/addons/sourcemod/scripting/swag.sp.disabled
+          #rm sourcemod/addons/sourcemod/scripting/UpdateCheck.sp
+          cp -rv mtg_src/src-tarballs/SteamWorks.inc sourcemod/addons/sourcemod/scripting/include/
+          ls -al sourcemod/addons/sourcemod/scripting/
+          ls -al sourcemod/addons/sourcemod/scripting/include/
+      - name: Build the base sourcemod plugins
+        run: |
+            cd sourcemod/addons/sourcemod/scripting
+            bash ./compile.sh
+      - name: Upload the base and extensions
+        uses: actions/upload-artifact@v2
+        with:
+            name: Base_Source_Mod_and_Exts
+            path: sourcemod/
+  setupplugdeps:
+    name: Build or setup extensions
+    runs-on: ubuntu-latest
+    needs: setupexts
+    steps:
+      - name: Import the repo
+        run: |
+          git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
+          mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
+      - name: Download base sourcemod
+        uses: actions/download-artifact@v1
+        with:
+          name: Base_Source_Mod_and_Exts
+      - name: What do we have
         run: |
           find
-
-#      - name: Explode things  Curl
-#        run: |
-#           mv mtg_src/src-tarballs/curl*.zip ./extra-things/curl/curl.zip
-#           cd extra-things/curl
-#           unzip curl.zip
-#           find
-#      - name: Explode things  Socket
-#        run: |
-#          # Aparently socket got replaced by socket.ext
-#          #mv mtg_src/src-tarballs/socket*.zip ./extra-things/socket/socket.zip
-#          #unzip socket.zip
-#          mkdir -p ./extra-things/socket/scripting/include
-#          cp mtg_src/src-tarballs/socket.inc ./extra-things/socket/scripting/include
-#          find extra-things/socket
-#      - name: Explode things  SteamTools
-#        run: |
-#          pwd
-#          mv mtg_src/src-tarballs/steamtools*.zip ./extra-things/steamtools/steamtools.zip
-#          cd extra-things/steamtools
-#          pwd
-#          unzip steamtools.zip
-#          cd ../..
-#          pwd
-#          rm ./extra-things/steamtools/addons/sourcemod/scripting/include/steamtools.inc
-#          cp mtg_src/src-tarballs/steamtools.inc ./extra-things/steamtools/addons/sourcemod/scripting/include/steamtools.inc
-#          cd extra-things/steamtools
-#          pwd
-#          find
-#      - name: Explode things  SteamWorks
-#        run: |
-#          mv mtg_src/src-tarballs/steamworks*.tar.gz ./extra-things/steamworks/steamworks.tar.gz
-#          cd extra-things/steamworks
-#          tar -zxvf steamworks.tar.gz
-#          mv SteamWorks* SteamWorks
-#          find
 #      - name: Explode things  Updater
 #        run: |
 #          mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater/Updater.tar.gz
@@ -107,28 +154,6 @@ jobs:
 #      - name: What do we have?
 #        run: |
 #          ls -al sourcemod/addons/sourcemod/scripting/compiled
-#      - name: Copy extra libs & modify files in for compiling
-#        run: |
-#          cp -rv extra-things/curl/scripting/* sourcemod/addons/sourcemod/scripting/
-#          rm sourcemod/addons/sourcemod/scripting/curl_self_test.sp
-#          #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/cURL.inc
-#          cp -rv mtg_src/src-tarballs/cURL.inc sourcemod/addons/sourcemod/scripting/include/cURL.inc
-#          cp -rv mtg_src/src-tarballs/cURL_header.inc sourcemod/addons/sourcemod/scripting/include/cURL_header.inc
-#          #cp -rv extra-things/socket/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
-#          cp -rv extra-things/socket/scripting/* sourcemod/addons/sourcemod/scripting/
-#          #rm sourcemod/addons/sourcemod/scripting/example.sp
-#          #rm sourcemod/addons/sourcemod/scripting/listenexample.sp
-#          #rm sourcemod/addons/sourcemod/scripting/selftest.sp
-#          #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/socket.inc
-#          cp -rv extra-things/steamtools/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
-#          #sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
-#          #rm sourcemod/addons/sourcemod/scripting/steamtools.sp
-#          cp -rv extra-things/steamworks/SteamWorks/Pawn/* sourcemod/addons/sourcemod/scripting/
-#          #mv sourcemod/addons/sourcemod/scripting/swag.sp sourcemod/addons/sourcemod/scripting/swag.sp.disabled
-#          #rm sourcemod/addons/sourcemod/scripting/UpdateCheck.sp
-#          cp -rv mtg_src/src-tarballs/SteamWorks.inc sourcemod/addons/sourcemod/scripting/include/
-#          ls -al sourcemod/addons/sourcemod/scripting/
-#          ls -al sourcemod/addons/sourcemod/scripting/include/
 #      - name: Build the base+extra libs sourcemod plugins
 #        run: |
 #          cd sourcemod/addons/sourcemod/scripting
