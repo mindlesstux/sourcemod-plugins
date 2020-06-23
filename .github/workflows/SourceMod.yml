@@ -152,6 +152,8 @@ jobs:
       - name: Copy depenancy plugins in for compiling
         run: |
           cp -rv extra-things/updater/Updater/* sourcemod/addons/sourcemod/scripting/
+          cp -v mtg_src/code/reference/updater.sp sourcemod/addons/sourcemod/scripting/
+          cp -v mtg_src/code/reference/updater_mindlesstux.sp sourcemod/addons/sourcemod/scripting/updater_mindlesstux.spinc
       - name: Build the base+extra libs+depenancy sourcemod plugins
         run: |
           cd sourcemod/addons/sourcemod/scripting
@@ -178,8 +180,6 @@ jobs:
       - name: Copy my plugins in for compiling
         run: |
           cp -rv mtg_src/code/TF2_Cheater_Annoyer/* sourcemod/addons/sourcemod/
-          cp -v mtg_src/code/reference/updater.sp sourcemod/addons/sourcemod/scripting/
-          cp -v mtg_src/code/reference/updater_mindlesstux.sp sourcemod/addons/sourcemod/scripting/updater_mindlesstux.spinc
       - name: Build the base+extra libs+depenancy plugins+my sourcemod plugins
         run: |
           cd sourcemod/addons/sourcemod/scripting
