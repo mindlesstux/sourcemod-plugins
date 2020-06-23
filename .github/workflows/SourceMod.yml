@@ -134,7 +134,7 @@ jobs:
         run: |
           git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
           mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
-          mv Base_Source_Mod sourcemod
+          mv Base_Source_Mod_and_Exts sourcemod
       - name: "Explode things: Updater"
         run: |
           mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater/Updater.tar.gz
@@ -174,7 +174,7 @@ jobs:
         run: |
           git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
           mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
-          mv Base_Source_Mod sourcemod
+          mv Base_Source_Mod_and_Exts_and_Deps sourcemod
       - name: Copy my plugins in for compiling
         run: |
           cp -rv mtg_src/code/TF2_Cheater_Annoyer/* sourcemod/addons/sourcemod/
@@ -202,7 +202,7 @@ jobs:
         run: |
           git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
           mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
-          mv Base_Source_Mod sourcemod
+          mv Base_Source_Mod_and_Exts_and_Deps_and_My_Plugs sourcemod
       - name: Celebrate
         run: |
           echo "Holy cow, it finally made it here!"
