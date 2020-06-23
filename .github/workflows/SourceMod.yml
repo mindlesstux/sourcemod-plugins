@@ -55,6 +55,7 @@ jobs:
           git clone https://github.com/mindlesstux/sourcemod-plugins.git mtg_src
           mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
           mv Base_Source_Mod sourcemod
+          chmod -v 700 sourcemod/addons/sourcemod/scripting/spcom*
       - name: Explode things  Curl
         run: |
            mv mtg_src/src-tarballs/curl*.zip ./extra-things/curl/curl.zip

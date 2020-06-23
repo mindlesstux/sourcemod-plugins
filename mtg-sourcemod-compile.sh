@@ -2,6 +2,7 @@
 cd "$(dirname "$0")"
 
 test -e compiled || mkdir compiled
+chmod -v 700 spcom*
 
 if [[ $# -ne 0 ]]; then
         for sourcefile in "$@"
