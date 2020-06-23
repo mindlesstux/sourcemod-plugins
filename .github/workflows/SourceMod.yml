@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   setupbase:
-    name: Build base SourceMod
+    name: Build base SourceMod Plugins
     runs-on: ubuntu-latest
     steps:
       - name: Import the repo 
@@ -56,6 +56,9 @@ jobs:
           name: Base_Source_Mod
       - name: Explode things  Curl
         run: |
+           echo "TODO: REMOVE THIS DEBUG"
+           find
+           echo "END TODO"
            mv mtg_src/src-tarballs/curl*.zip ./extra-things/curl/curl.zip
            cd extra-things/curl
            unzip curl.zip
@@ -121,7 +124,7 @@ jobs:
             name: Base_Source_Mod_and_Exts
             path: sourcemod/
   setupplugdeps:
-    name: Build or setup extensions
+    name: Build or setup my plugin dependencies
     runs-on: ubuntu-latest
     needs: setupexts
     steps:
