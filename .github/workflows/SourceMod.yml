@@ -15,8 +15,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
-    name: Build my plugins
+  setupbase:
+    name: Build base SourceMod
     runs-on: ubuntu-latest
     steps:
       - name: Import various bits of source 
@@ -31,6 +31,24 @@ jobs:
           chmod +x addons/sourcemod/scripting/compile.sh
           cd ..
           mkdir -p extra-things/updater extra-things/socket extra-things/curl extra-things/steamworks extra-things/steamtools
+      - name: Build the base sourcemod plugins
+        run: |
+          cd sourcemod/addons/sourcemod/scripting
+          bash ./compile.sh
+      - name: Upload the base
+        uses: actions/upload-artifact@v1
+        with:
+            name: Base Source Mod
+            path: sourcemod
+  setupexts:
+    name: Build or setup extensions
+    runs-on: ubuntu-latest
+    needs: setupbase
+    steps:
+      - name: Download base sourcemod
+        uses: actions/download-artifact@v1
+        with:
+          name: Upload the base
       - name: Explode things  Curl
         run: |
            mv mtg_src/src-tarballs/curl*.zip ./extra-things/curl/curl.zip
@@ -80,10 +98,7 @@ jobs:
           ls -al mtg_src
           ls -al sourcemod
           ls -al extra-things
-      - name: Build the base sourcemod plugins
-        run: |
-          cd sourcemod/addons/sourcemod/scripting
-          bash ./compile.sh
+
       - name: What do we have?
         run: |
           ls -al sourcemod/addons/sourcemod/scripting/compiled
