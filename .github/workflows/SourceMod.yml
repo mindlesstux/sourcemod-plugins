@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Build my plugins
+name: Build my plugins v2
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -49,98 +49,99 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: Upload the base
-      - name: Explode things  Curl
-        run: |
-           mv mtg_src/src-tarballs/curl*.zip ./extra-things/curl/curl.zip
-           cd extra-things/curl
-           unzip curl.zip
-           find
-      - name: Explode things  Socket
-        run: |
-          # Aparently socket got replaced by socket.ext
-          #mv mtg_src/src-tarballs/socket*.zip ./extra-things/socket/socket.zip
-          #unzip socket.zip
-          mkdir -p ./extra-things/socket/scripting/include
-          cp mtg_src/src-tarballs/socket.inc ./extra-things/socket/scripting/include
-          find extra-things/socket
-      - name: Explode things  SteamTools
-        run: |
-          pwd
-          mv mtg_src/src-tarballs/steamtools*.zip ./extra-things/steamtools/steamtools.zip
-          cd extra-things/steamtools
-          pwd
-          unzip steamtools.zip
-          cd ../..
-          pwd
-          rm ./extra-things/steamtools/addons/sourcemod/scripting/include/steamtools.inc
-          cp mtg_src/src-tarballs/steamtools.inc ./extra-things/steamtools/addons/sourcemod/scripting/include/steamtools.inc
-          cd extra-things/steamtools
-          pwd
-          find
-      - name: Explode things  SteamWorks
-        run: |
-          mv mtg_src/src-tarballs/steamworks*.tar.gz ./extra-things/steamworks/steamworks.tar.gz
-          cd extra-things/steamworks
-          tar -zxvf steamworks.tar.gz
-          mv SteamWorks* SteamWorks
-          find
-      - name: Explode things  Updater
-        run: |
-          mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater/Updater.tar.gz
-          cd extra-things/updater
-          tar zxf Updater.tar.gz
-          mv GoD_Tony-updater-* Updater
-          find
-      - name: What do we have?
-        run: |
-          pwd
-          ls -al
-          ls -al mtg_src
-          ls -al sourcemod
-          ls -al extra-things
-
-      - name: What do we have?
-        run: |
-          ls -al sourcemod/addons/sourcemod/scripting/compiled
-      - name: Copy extra libs & modify files in for compiling
-        run: |
-          cp -rv extra-things/curl/scripting/* sourcemod/addons/sourcemod/scripting/
-          rm sourcemod/addons/sourcemod/scripting/curl_self_test.sp
-          #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/cURL.inc
-          cp -rv mtg_src/src-tarballs/cURL.inc sourcemod/addons/sourcemod/scripting/include/cURL.inc
-          cp -rv mtg_src/src-tarballs/cURL_header.inc sourcemod/addons/sourcemod/scripting/include/cURL_header.inc
-          #cp -rv extra-things/socket/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
-          cp -rv extra-things/socket/scripting/* sourcemod/addons/sourcemod/scripting/
-          #rm sourcemod/addons/sourcemod/scripting/example.sp
-          #rm sourcemod/addons/sourcemod/scripting/listenexample.sp
-          #rm sourcemod/addons/sourcemod/scripting/selftest.sp
-          #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/socket.inc
-          cp -rv extra-things/steamtools/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
-          #sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
-          #rm sourcemod/addons/sourcemod/scripting/steamtools.sp
-          cp -rv extra-things/steamworks/SteamWorks/Pawn/* sourcemod/addons/sourcemod/scripting/
-          #mv sourcemod/addons/sourcemod/scripting/swag.sp sourcemod/addons/sourcemod/scripting/swag.sp.disabled
-          #rm sourcemod/addons/sourcemod/scripting/UpdateCheck.sp
-          cp -rv mtg_src/src-tarballs/SteamWorks.inc sourcemod/addons/sourcemod/scripting/include/
-          ls -al sourcemod/addons/sourcemod/scripting/
-          ls -al sourcemod/addons/sourcemod/scripting/include/
-      - name: Build the base+extra libs sourcemod plugins
-        run: |
-          cd sourcemod/addons/sourcemod/scripting
-          bash ./compile.sh
-      - name: Copy depenancy plugins in for compiling
-        run: |
-          cp -rv extra-things/updater/Updater/* sourcemod/addons/sourcemod/scripting/
-      - name: Build the base+extra libs+depenancy plugins sourcemod plugins
-        run: |
-          cd sourcemod/addons/sourcemod/scripting
-          bash ./compile.sh
-      - name: Copy my plugins in for compiling
-        run: |
-          cp -rv mtg_src/code/TF2_Cheater_Annoyer/* sourcemod/addons/sourcemod/
-          cp -v mtg_src/code/reference/updater.sp sourcemod/addons/sourcemod/scripting/
-          cp -v mtg_src/code/reference/updater_mindlesstux.sp sourcemod/addons/sourcemod/scripting/updater_mindlesstux.spinc
-      - name: Build the base+extra libs+depenancy plugins+my sourcemod plugins
-        run: |
-          cd sourcemod/addons/sourcemod/scripting
-          bash ./compile.sh
+      - name: 
+#      - name: Explode things  Curl
+#        run: |
+#           mv mtg_src/src-tarballs/curl*.zip ./extra-things/curl/curl.zip
+#           cd extra-things/curl
+#           unzip curl.zip
+#           find
+#      - name: Explode things  Socket
+#        run: |
+#          # Aparently socket got replaced by socket.ext
+#          #mv mtg_src/src-tarballs/socket*.zip ./extra-things/socket/socket.zip
+#          #unzip socket.zip
+#          mkdir -p ./extra-things/socket/scripting/include
+#          cp mtg_src/src-tarballs/socket.inc ./extra-things/socket/scripting/include
+#          find extra-things/socket
+#      - name: Explode things  SteamTools
+#        run: |
+#          pwd
+#          mv mtg_src/src-tarballs/steamtools*.zip ./extra-things/steamtools/steamtools.zip
+#          cd extra-things/steamtools
+#          pwd
+#          unzip steamtools.zip
+#          cd ../..
+#          pwd
+#          rm ./extra-things/steamtools/addons/sourcemod/scripting/include/steamtools.inc
+#          cp mtg_src/src-tarballs/steamtools.inc ./extra-things/steamtools/addons/sourcemod/scripting/include/steamtools.inc
+#          cd extra-things/steamtools
+#          pwd
+#          find
+#      - name: Explode things  SteamWorks
+#        run: |
+#          mv mtg_src/src-tarballs/steamworks*.tar.gz ./extra-things/steamworks/steamworks.tar.gz
+#          cd extra-things/steamworks
+#          tar -zxvf steamworks.tar.gz
+#          mv SteamWorks* SteamWorks
+#          find
+#      - name: Explode things  Updater
+#        run: |
+#          mv mtg_src/src-tarballs/Updater*.tar.gz ./extra-things/updater/Updater.tar.gz
+#          cd extra-things/updater
+#          tar zxf Updater.tar.gz
+#          mv GoD_Tony-updater-* Updater
+#          find
+#      - name: What do we have?
+#        run: |
+#          pwd
+#          ls -al
+#          ls -al mtg_src
+#          ls -al sourcemod
+#          ls -al extra-things
+#
+#      - name: What do we have?
+#        run: |
+#          ls -al sourcemod/addons/sourcemod/scripting/compiled
+#      - name: Copy extra libs & modify files in for compiling
+#        run: |
+#          cp -rv extra-things/curl/scripting/* sourcemod/addons/sourcemod/scripting/
+#          rm sourcemod/addons/sourcemod/scripting/curl_self_test.sp
+#          #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/cURL.inc
+#          cp -rv mtg_src/src-tarballs/cURL.inc sourcemod/addons/sourcemod/scripting/include/cURL.inc
+#          cp -rv mtg_src/src-tarballs/cURL_header.inc sourcemod/addons/sourcemod/scripting/include/cURL_header.inc
+#          #cp -rv extra-things/socket/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
+#          cp -rv extra-things/socket/scripting/* sourcemod/addons/sourcemod/scripting/
+#          #rm sourcemod/addons/sourcemod/scripting/example.sp
+#          #rm sourcemod/addons/sourcemod/scripting/listenexample.sp
+#          #rm sourcemod/addons/sourcemod/scripting/selftest.sp
+#          #sed -i 's/funcenum /typeset /g' sourcemod/addons/sourcemod/scripting/include/socket.inc
+#          cp -rv extra-things/steamtools/addons/sourcemod/scripting/* sourcemod/addons/sourcemod/scripting/
+#          #sed -i 's/funcenum HTTPRequestComplete/typeset HTTPRequestComplete/g' sourcemod/addons/sourcemod/scripting/include/steamtools.inc
+#          #rm sourcemod/addons/sourcemod/scripting/steamtools.sp
+#          cp -rv extra-things/steamworks/SteamWorks/Pawn/* sourcemod/addons/sourcemod/scripting/
+#          #mv sourcemod/addons/sourcemod/scripting/swag.sp sourcemod/addons/sourcemod/scripting/swag.sp.disabled
+#          #rm sourcemod/addons/sourcemod/scripting/UpdateCheck.sp
+#          cp -rv mtg_src/src-tarballs/SteamWorks.inc sourcemod/addons/sourcemod/scripting/include/
+#          ls -al sourcemod/addons/sourcemod/scripting/
+#          ls -al sourcemod/addons/sourcemod/scripting/include/
+#      - name: Build the base+extra libs sourcemod plugins
+#        run: |
+#          cd sourcemod/addons/sourcemod/scripting
+#          bash ./compile.sh
+#      - name: Copy depenancy plugins in for compiling
+#        run: |
+#          cp -rv extra-things/updater/Updater/* sourcemod/addons/sourcemod/scripting/
+#      - name: Build the base+extra libs+depenancy plugins sourcemod plugins
+#        run: |
+#          cd sourcemod/addons/sourcemod/scripting
+#          bash ./compile.sh
+#      - name: Copy my plugins in for compiling
+#        run: |
+#          cp -rv mtg_src/code/TF2_Cheater_Annoyer/* sourcemod/addons/sourcemod/
+#          cp -v mtg_src/code/reference/updater.sp sourcemod/addons/sourcemod/scripting/
+#          cp -v mtg_src/code/reference/updater_mindlesstux.sp sourcemod/addons/sourcemod/scripting/updater_mindlesstux.spinc
+#      - name: Build the base+extra libs+depenancy plugins+my sourcemod plugins
+#        run: |
+#          cd sourcemod/addons/sourcemod/scripting
+#          bash ./compile.sh
