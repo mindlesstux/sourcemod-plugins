@@ -47,7 +47,7 @@ jobs:
     needs: setupbase
     steps:
       - name: Download base sourcemod artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: Base_Source_Mod
       - name: Import the repo and rename artifact
@@ -127,7 +127,7 @@ jobs:
     needs: setupexts
     steps:
       - name: Download base sourcemod
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: Base_Source_Mod_and_Exts
       - name: Import the repo and rename artifact
@@ -169,7 +169,7 @@ jobs:
     needs: setupplugdeps
     steps:
       - name: Download base sourcemod
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: Base_Source_Mod_and_Exts_and_Deps
       - name: Import the repo and rename artifact
@@ -195,7 +195,7 @@ jobs:
     needs: setupmyplugs
     steps:
       - name: Download base sourcemod
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: Base_Source_Mod_and_Exts_and_Deps_and_My_Plugs
       - name: Import the repo and rename artifact
